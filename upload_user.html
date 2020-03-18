@@ -7,11 +7,19 @@
     <title>Upload user images</title>
 
     <!-- Bootstrap imports -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
 
-    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
 
 
     <!-- JS imports  -->
@@ -22,72 +30,106 @@
 </head>
 
 <style>
-    * {
-        margin: 0;
-        padding: 0;
+    .container {
+        margin: 20px !important;
     }
 
     body {
+        margin: 0;
+        padding: 0;
+        width: 100vw;
         height: 100vh;
-    }
-
-    .main-container {
-        height: 20vh;
         display: flex;
         justify-content: center;
         align-items: center;
-        flex-direction: row;
+        flex-direction: column;
     }
 
-    .video-container {
-        display: flex;
-        justify-content: center;
-        align-items: center;
+    video {
+        width: 100%;
+        height: auto;
+        position: absolute;
+        top: 0;
+        left: 0;
     }
 
     canvas {
-        position: relative;
-       
-    }
-    .input-container{
-        display: flex;
-        justify-content: center;
-        align-items: center ;
-    }
-    video {
-        margin-top: 20%;
+        width: 100%;
+        height: auto;
         position: absolute;
+        top: 0;
+        left: 0;
+        z-index: 10;
     }
 
-    .img-container {
+    img {
+        padding-bottom: 40px;
+        width: 100%;
+        height: 50%;
+    }
+
+    #img {
+        max-height: 250px;
+        max-width: 50%;
+        overflow: auto;
         display: flex;
-        flex-direction: column;
-        justify-content: center;
+        flex-direction: row;
+        justify-content: space-around;
         align-items: center;
+        flex-wrap: wrap;
+    }
+
+    .main-container {
+        margin-right: auto;
+        margin-left: auto;
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+
+    span{
+        display: none;
     }
 </style>
 
 <body>
-    <div class="container input-container">
-        <label for="user_id">Enter your ID</label>
-        <input class="form-control" type="text" id="user_id" required />
-    </div>
-    <div class="main-container">
-        <button id="snapbtn" class="btn btn-success">
-            Take a Snap
-        </button>
-        <button id="uploadbtn" class="btn btn-danger btn-disabled">
-            Upload all images
-        </button>
-    </div>
+    <div class="container">
+        <div id="vid" class="embed-responsive embed-responsive-16by9 container video-container">
+            <video id="video" width=500 height=400 autoplay muted></video>
+        </div>
+        <table class="table table-responsive">
+            <tr>
+                <div class="panel container input-container">
+                    <label for="user_id">Enter your ID</label>
+                    <input class="form-control" type="text" id="user_id" required />
+                    <span> Please enter valid user id</span>
+                </div>
+            </tr>
 
-    <div class="video-container">
-        <video id="video" width="720" height="560" autoplay muted></video>
-    </div>
-    <div class="img-container">
-        <!-- All display images go here -->
+            <tr>
+                <div class="panel">
+                    <div class="main-container panel-body">
+                        <button id="uploadbtn"  onclick="postImage()" class="btn btn-danger">
+                            Upload all images
+                        </button>
+                    </div>
+                </div>
+            </tr>
 
+            <tr>
+                <center>
+                    <div class="panel container img-container">
+                        <!-- All display images go here -->
+                        <div class="panel-body" id="img">
+
+                        </div>
+                    </div>
+                </center>
+            </tr>
+        </table>
     </div>
 </body>
+
+
+
 
 </html>
