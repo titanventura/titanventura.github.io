@@ -62,7 +62,7 @@ function revokeURL(e) {
 
 async function postData(image_data) {
   await $.ajax({
-    url: 'https://Heimdall-280442718.ap-south-1.elb.amazonaws.com/predict_user/', // point to server-side controller method
+    url: 'https://heimdall.iqube.io/predict_user/', // point to server-side controller method
     dataType: 'image', // what to expect back from the server
     cache: false,
     contentType: false,
@@ -106,7 +106,7 @@ async function postImage(blob) {
       body: form_data,
       redirect: 'follow'
   };
-  const response = await fetch("https://Heimdall-280442718.ap-south-1.elb.amazonaws.com/predict_user/",requestOptions)
+  const response = await fetch("https://heimdall.iqube.io/predict_user/",requestOptions)
   
   const result = await response.text();
   console.log("POST RESULT IDENTIFIER.. ",result);
