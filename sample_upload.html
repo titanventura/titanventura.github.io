@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sample upload</title>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+</head>
+
+<style>
+    canvas {
+        position: absolute;
+    }
+</style>
+
+<body>
+    <img src="./image_1.jpg" id="myimg" alt="">
+</body>
+
+<script>
+    // step 1 : get blob from image
+
+    function blob_from_img() {
+        const image = document.getElementById("myimg");
+        console.log(image);
+        const canvas = document.createElement("canvas");
+        const context = canvas.getContext("2d");
+        console.log("context created");
+        console.log(context);
+        context.drawImage(image, 0, 0, image.width, image.height);
+        const blob = canvas.toDataURL("image/png");
+        console.log(blob);
+        return blob;
+    }
+    // blog_from_img();
+
+    // step 2 : post blob to server (AWS)
+    async function postImage(blob) {
+        const form_data = new FormData();
+        const myHeaders = new Headers();
+        myHeaders.append("Authorization", "Basic c3JpbmF0aDpzcm50aHNyZGhybg==");
+        myHeaders.append("Content-Type", "multipart/form-data;");
+        // myHeaders.append("Access-Control-Allow-Origin","true");  
+        // myHeaders.append("Accept","*/*");        
+        // myHeaders.append("Access-Control-Allow-Credentials","true");        
+        // myHeaders.append("Accept-Encoding","gzip, deflate, br");        
+        // myHeaders.append("mode","no-cors");
+        form_data.append("image_1", blob);
+
+        var requestOptions = {
+            method: 'POST',
+            headers: myHeaders,
+            body: form_data,
+            redirect: 'follow'
+        };
+        const response = await fetch("http://Heimdall-280442718.ap-south-1.elb.amazonaws.com/predict_user/",requestOptions)
+        
+        const result = await response.text();
+        console.log(result);
+    }
+
+
+    postImage(blob_from_img());
+
+    // we'll run ?yes
+</script>
+
+</html>
+<!-- 
+[{"key":"Authorization","system":true,"value":"Basic c3JpbmF0aDpzcm50aHNyZGhybg==","enabled":true,"disableEdit":true},{"key":"User-Agent","system":true,"value":"PostmanRuntime/7.23.0","enabled":true,"disableEdit":true},{"key":"Accept","system":true,"value":"*/*","enabled":true,"disableEdit":true},{"key":"Cache-Control","system":true,"value":"no-cache","enabled":true,"disableEdit":true},{"key":"Postman-Token","system":true,"value":"f9810569-1ab8-4987-a6ad-528242b96678","enabled":true,"disableEdit":true},{"key":"Host","system":true,"value":"heimdall-280442718.ap-south-1.elb.amazonaws.com","enabled":true,"disableEdit":true},{"key":"Content-Type","system":true,"value":"multipart/form-data; boundary=--------------------------063571072169971336815057","enabled":true,"disableEdit":true},{"key":"Accept-Encoding","system":true,"value":"gzip, deflate, br","enabled":true,"disableEdit":true},{"key":"Content-Length","system":true,"value":1943734,"enabled":true,"disableEdit":true}]
+
+
+Authorization
+Basic c3JpbmF0aDpzcm50aHNyZGhybg==
+User-Agent
+PostmanRuntime/7.23.0
+Accept
+*/*
+Cache-Control
+no-cache
+Postman-Token
+f9810569-1ab8-4987-a6ad-528242b96678
+Host
+heimdall-280442718.ap-south-1.elb.amazonaws.com
+Content-Type
+multipart/form-data; boundary=--------------------------063571072169971336815057
+Accept-Encoding
+gzip, deflate, br
+Content-Length
+1943734
+Connection :keep-alive -->
