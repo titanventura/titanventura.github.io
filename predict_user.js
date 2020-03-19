@@ -48,7 +48,7 @@ video.addEventListener('play', () => {
         // Convert it to a blob to upload
         var blob = b64toBlob(realData, "png");
         
-        let resp = postImage(blob);
+        let resp = await postImage(blob);
         // results.forEach((bestMatch, i) => {
         //   const box = fullFaceDescriptions[i].detection.box
         //   const text = bestMatch.toString()
@@ -57,13 +57,13 @@ video.addEventListener('play', () => {
         // })
 
         // }
-      console.log(resizedDetections);
-      faceapi.draw.drawDetections(canvas, resizedDetections);
-      // resizedDetections.forEach(element => {
-      //   const box = element.detection.box
-      //   const drawBox = new faceapi.draw.DrawBox(box, { label: resp.message })
-      //   drawBox.draw(canvas)
-      // });
+
+      // faceapi.draw.drawDetections(canvas, resizedDetections);
+      resizedDetections.forEach(element => {
+        const box = element.detection._box
+        const drawBox = new faceapi.draw.DrawBox(box, { label: resp.message })
+        drawBox.draw(canvas)
+      });
       
       
       setTimeout(function(){},100);
