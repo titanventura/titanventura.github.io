@@ -14,8 +14,8 @@ function startVideo() {
 
 var i = 0;
 video.addEventListener('play',async () => {
-	video.width = window.innerWidth*2/3;
-	video.height = window.innerHeight*2/3;
+	video.width = window.innerWidth;
+	video.height = window.innerHeight;
 	console.log(window.innerWidth);
 	const canvas = faceapi.createCanvasFromMedia(video)
 	document.getElementById("vid-container").append(canvas)
