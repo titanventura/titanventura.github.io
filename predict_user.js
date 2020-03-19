@@ -27,7 +27,7 @@ video.addEventListener('play', () => {
     const detections = await faceapi.detectAllFaces(video, new faceapi.TinyFaceDetectorOptions());
     const resizedDetections = faceapi.resizeResults(detections, displaySize);
     canvas.getContext('2d').clearRect(0, 0, video.width, video.height);
-    if (detections.length > 0) {
+    if (detections.length > 0 && resizedDetections.length > 0) {
       // const blob = canvas.toDataURL("image/png");
       const imageObj = document.getElementById("pic");
       var src = "";
