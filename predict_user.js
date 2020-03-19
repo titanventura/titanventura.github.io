@@ -13,13 +13,12 @@ function startVideo() {
 }
 
 var i = 0;
-video.addEventListener('play', () => {
+video.addEventListener('play',async () => {
 	const canvas = faceapi.createCanvasFromMedia(video)
 	document.getElementById("vid-container").append(canvas)
 	const displaySize = { width: video.width, height: video.height }
 	faceapi.matchDimensions(canvas, displaySize)
 	while(true){
-		setTimeout(async()=>{
 		// To Detect all faces.
 		// const detections = await faceapi.detectAllFaces(video, new faceapi.TinyFaceDetectorOptions());
 
@@ -51,7 +50,7 @@ video.addEventListener('play', () => {
 			postImage(blob).then(res=>{
 				if (res.user != null) {
 					const box = detection._box
-					const drawBox = new faceapi.draw.DrawBox(box, { label: res.user })
+					const drawBox = new faceapi.draw.DrawBox(box, { label: res.user ,boxColor : "gree"})
 					drawBox.draw(canvas)
 				}
 				else if (res.user == null) {
@@ -60,11 +59,10 @@ video.addEventListener('play', () => {
 					drawBox.draw(canvas)
 				}
 			})
-			
+			setTimeout(()=>{},100);
 			// face detector only.
 			// faceapi.draw.drawDetections(canvas, resizedDetections);
 		}
-	},150);
 	}
 })
 
