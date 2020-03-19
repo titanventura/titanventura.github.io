@@ -1,6 +1,6 @@
 const video = document.getElementById("vid");
 const isScreenSmall = window.matchMedia("(max-width: 700px)");
-var can_snap=true;	
+var can_snap = true;
 let predictedAges = [];
 
 /****Loading the model ****/
@@ -28,7 +28,7 @@ function screenResize(isScreenSmall) {
 screenResize(isScreenSmall);
 isScreenSmall.addListener(screenResize);
 
-let pic_array =[];
+let pic_array = [];
 var count = 0;
 var array = [];
 var i = 0;
@@ -36,27 +36,26 @@ video.addEventListener('play', () => {
 
   const canvas = faceapi.createCanvasFromMedia(video)
   document.getElementById("vid").append(canvas)
-  const displaySize = { width: video.width , height: video.height }
+  const displaySize = { width: video.width, height: video.height }
   faceapi.matchDimensions(canvas, displaySize)
   setInterval(async () => {
     const detections = await faceapi.detectSingleFace(video, new faceapi.TinyFaceDetectorOptions());
-    
-    
-   
+
+
+
     if (detections != null) {
       const resizedDetections = faceapi.resizeResults(detections, displaySize);
       canvas.getContext('2d').clearRect(0, 0, video.width, video.height);
-        if(count < 25)
-        {
-      // const blob = canvas.toDataURL("image/png");
-      const imageObj = new Image();
-      var src = "";
-      // imageObj.onload = function(){
-        
+      if (count < 25) {
+        // const blob = canvas.toDataURL("image/png");
+        const imageObj = new Image();
+        var src = "";
+        // imageObj.onload = function(){
+
         const context = canvas.getContext("2d");
-        context.drawImage(video,0,0,video.width,video.height);
+        context.drawImage(video, 0, 0, video.width, video.height);
         src = canvas.toDataURL("image/jpeg");
-        
+
         imageObj.src = src;
         // console.log(src);  
         pic_array.push(src);
@@ -65,23 +64,20 @@ video.addEventListener('play', () => {
         // }
         count++;
         console.log(count);
-    }
-    else if(count === 25)
-    {
-        video.pause();
-    }
-      faceapi.draw.drawDetections(canvas, resizedDetections);
-      
       }
+      else if (count === 25) {
+        video.pause();
+      }
+      faceapi.draw.drawDetections(canvas, resizedDetections);
+
+    }
   }, 200)
 })
-function renderArray(pic_array)
-{
-    var container = document.getElementById("#img-container");
-    for(let x=0;x<pic_array;x++)
-    {
-        container.appendChild(pic_array[i]);
-    }
+function renderArray(pic_array) {
+  var container = document.getElementById("#img-container");
+  for (let x = 0; x < pic_array; x++) {
+    container.appendChild(pic_array[i]);
+  }
 }
 function saveFrame(blob) {
   array.push(blob);
@@ -110,11 +106,13 @@ async function postData(image_data) {
       const p_element = document.createElement("p");
       p_element.textContent = "data sent to server" + Date.now().toString();
       document.querySelector("body").append(p_element);
+
     },
     error: function (response) {
       const p_element = document.createElement("p");
       p_element.textContent = "error sending data to the sever" + Date.now().toString();
       document.querySelector("body").append(p_element);
+
     }
   });
 }
@@ -132,20 +130,21 @@ async function postData(image_data) {
 // important function
 
 async function postImage() {
-    console.log($("#user_id").val().length);
-    if($("#user_id").val().length == 0){
-        console.log("no userid");
-        $("#user_id").focus(function() { 
-            $(this).next("span").css("display", "border-box"); 
-        });
-        return;
-    }
+  document.getElementById("notify").style = "display:inline";
+  document.getElementById("notify").textContent = "upload started"
+  console.log($("#user_id").val().length);
+  if ($("#user_id").val().length == 0) {
+    console.log("no userid");
+    $("#user_id").focus(function () {
+      $(this).next("span").css("display", "border-box");
+    });
+    return;
+  }
 
-    if(pic_array.length ==0 )
-    {
-        alert("please take photo and try");
-        
-    }
+  if (pic_array.length == 0) {
+    alert("please take photo and try");
+
+  }
   var form_data = new FormData();
   const myHeaders = new Headers();
   myHeaders.append("Authorization", "Basic " + btoa("srinath" + ":" + "srnthsrdhrn"));
@@ -156,59 +155,70 @@ async function postImage() {
   // myHeaders.append("Accept-Encoding","gzip, deflate, br");        
   // myHeaders.append("mode","no-cors");
 
-  
-  var user_id =$("#user_id").val();
-  console.log(user_id);
-  form_data.append("username",user_id);
-  for(var i=0;i<pic_array.length;i++)
-  {
-      var image_name = `image_${i+1}`;
-      var block = pic_array[i].split(";");
-			// Get the content type of the image
-			var contentType = block[0].split(":")[1];// In this case "image/gif"
-			// get the real base64 content of the file
-			var realData = block[1].split(",")[1];// In this case "R0lGODlhPQBEAPeoAJosM...."
-			// Convert it to a blob to upload
-      var blob = b64toBlob(realData, "png");
-      
 
-      form_data.append(image_name,blob);
+  var user_id = $("#user_id").val();
+  console.log(user_id);
+  form_data.append("username", user_id);
+  for (var i = 0; i < pic_array.length; i++) {
+    var image_name = `image_${i + 1}`;
+    var block = pic_array[i].split(";");
+    // Get the content type of the image
+    var contentType = block[0].split(":")[1];// In this case "image/gif"
+    // get the real base64 content of the file
+    var realData = block[1].split(",")[1];// In this case "R0lGODlhPQBEAPeoAJosM...."
+    // Convert it to a blob to upload
+    var blob = b64toBlob(realData, "png");
+
+
+    form_data.append(image_name, blob);
   }
-console.log("image entries aree");
-  for(var i of form_data.entries())
-  {
-    console.log(i[0] + " " +i[1])
+  console.log("image entries aree");
+  for (var i of form_data.entries()) {
+    console.log(i[0] + " " + i[1])
   }
   var requestOptions = {
-      method: 'POST',
-      headers: myHeaders,
-      body: form_data,
+    method: 'POST',
+    headers: myHeaders,
+    body: form_data,
     //   redirect: 'follow'
   };
   console.log(form_data);
-  const response = await fetch("https://heimdall.iqube.io/upload_images/",requestOptions)
-  
+  fetch("https://heimdall.iqube.io/upload_images/", requestOptions).then(res => {
+    return res.json()
+  }).then(resp => {
+    console.log(resp);
+    if(resp[0].includes("rejected")){
+      document.getElementById("notify").style = "display:none";
+      document.getElementById("notify_fail").style = "display:inline";
+    document.getElementById("notify_fail").textContent = "Failure uploading to server"
+    }
+    else{
+    document.getElementById("notify").textContent = `Server returned ${ resp }`
+    }
+    
+  }).catch(err => {
+    document.getElementById("notify_fail").style = "display:inline";
+    document.getElementById("notify_fail").textContent = "Failure uploading to server"
+  })
+
   const result = await response.text();
-  console.log("POST RESULT IDENTIFIER.. ",result);
+  console.log("POST RESULT IDENTIFIER.. ", result);
 }
 
-function b64toBlob(b64Data, contentType, sliceSize) 
-{
-	contentType = contentType || '';
-	sliceSize = sliceSize || 512;
-	var byteCharacters = atob(b64Data);
-	var byteArrays = [];
-	for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) 
-	{
-		var slice = byteCharacters.slice(offset, offset + sliceSize);
-		var byteNumbers = new Array(slice.length);
-		for (var i = 0; i < slice.length; i++) 
-		{
-			byteNumbers[i] = slice.charCodeAt(i);
-		}
-		var byteArray = new Uint8Array(byteNumbers);
-		byteArrays.push(byteArray);
-	}
-	var blob = new Blob(byteArrays, { type: contentType });
-	return blob;
+function b64toBlob(b64Data, contentType, sliceSize) {
+  contentType = contentType || '';
+  sliceSize = sliceSize || 512;
+  var byteCharacters = atob(b64Data);
+  var byteArrays = [];
+  for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+    var slice = byteCharacters.slice(offset, offset + sliceSize);
+    var byteNumbers = new Array(slice.length);
+    for (var i = 0; i < slice.length; i++) {
+      byteNumbers[i] = slice.charCodeAt(i);
+    }
+    var byteArray = new Uint8Array(byteNumbers);
+    byteArrays.push(byteArray);
+  }
+  var blob = new Blob(byteArrays, { type: contentType });
+  return blob;
 }
