@@ -1,24 +1,40 @@
-const video = document.getElementById('video')
-var can_snap =true;
+const video = document.getElementById("video");
+const isScreenSmall = window.matchMedia("(max-width: 700px)");
+var can_snap=true;	
+let predictedAges = [];
+
+/****Loading the model ****/
 Promise.all([
-	faceapi.nets.tinyFaceDetector.loadFromUri('/models')
-]).then(startVideo)
+  faceapi.nets.tinyFaceDetector.loadFromUri("/models"),
+]).then(startVideo);
 
 function startVideo() {
-	navigator.getUserMedia(
-		{ video: true },
-		stream => video.srcObject = stream,
-		err => console.error(err)
-	)
+  navigator.getUserMedia(
+    { video: {} },
+    stream => (video.srcObject = stream),
+    err => console.error(err)
+  );
 }
+
+/****Fixing the video with based on size size  ****/
+function screenResize(isScreenSmall) {
+  if (isScreenSmall.matches) {
+    video.style.width = "320px";
+  } else {
+    video.style.width = "500px";
+  }
+}
+
+screenResize(isScreenSmall);
+isScreenSmall.addListener(screenResize);
 
 var i = 0;
 video.addEventListener('play',async () => {
-	video.width = window.innerWidth;
-	video.height = window.innerHeight;
+	// video.width = window.innerWidth;
+	// video.height = window.innerHeight;
 	console.log(window.innerWidth);
 	const canvas = faceapi.createCanvasFromMedia(video)
-	document.getElementById("vid-container").append(canvas)
+	document.getElementById("containerr").append(canvas)
 	const displaySize = { width: video.width, height: video.height }
 	faceapi.matchDimensions(canvas, displaySize)
 	while(true){
@@ -53,13 +69,13 @@ video.addEventListener('play',async () => {
 			can_snap = false
 			postImage(blob).then(res=>{
 				if (res.user != null) {
-					const box = resizedDetections._box
+					const box = detection._box
 					const drawBox = new faceapi.draw.DrawBox(box, { label: res.user ,boxColor : "green" ,lineWidth:5, drawLabelOptions:{fontSize:25}})
 					drawBox.draw(canvas)
 					can_snap = true
 				}
 				else if (res.user == null) {
-					const box = resizedDetections._box
+					const box = detection._box
 					const drawBox = new faceapi.draw.DrawBox(box, { label: "searching",boxColor:"red",lineWidth:5 ,drawLabelOptions:{fontSize:25}})
 					drawBox.draw(canvas)
 					can_snap = true
