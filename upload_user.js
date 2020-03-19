@@ -137,7 +137,7 @@ async function postImage() {
         alert("please take photo and try");
         
     }
-  const form_data = new FormData();
+  var form_data = new FormData();
   const myHeaders = new Headers();
   myHeaders.append("Authorization", "Basic " + btoa("srinath" + ":" + "srnthsrdhrn"));
   myHeaders.append("Content-Type", "multipart/form-data; boundary=--------------------------967216418725170803396561");
@@ -147,21 +147,22 @@ async function postImage() {
   // myHeaders.append("Accept-Encoding","gzip, deflate, br");        
   // myHeaders.append("mode","no-cors");
 
-  console.log(form_data);
+  
   var user_id =$("#user_id").val();
   console.log(user_id);
-  form_data.append("username","nirosh");
-//   for(var i=0;i<pic_array.length;i++)
-//   {
-//       var image_name = `image_${i+1}`;
-//       form_data.append(image_name,pic_array[i]);
-//   }
+  form_data.append("username",user_id);
+  for(var i=0;i<pic_array.length;i++)
+  {
+      var image_name = `image_${i+1}`;
+      form_data.append(image_name,pic_array[i]);
+  }
   var requestOptions = {
       method: 'POST',
       headers: myHeaders,
       body: form_data,
     //   redirect: 'follow'
   };
+  console.log(form_data);
   const response = await fetch("https://heimdall.iqube.io/upload_images/",requestOptions)
   
   const result = await response.text();

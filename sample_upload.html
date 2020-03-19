@@ -10,61 +10,129 @@
 </head>
 
 <style>
+    body {
+        background-size: contain;
+    }
+
     canvas {
         position: absolute;
     }
 </style>
 
 <body>
-    <img src="./image_1.jpg" id="myimg" alt="">
+    <img src="./predit_this.png" id="myimg" alt="">
+    <canvas id="can"></canvas>
 </body>
 
 <script>
+    //     window.onload = function() {
+    //   var c = document.getElementById("can");
+    //   var ctx = c.getContext("2d");
+    //   var img = document.getElementById("myimg");
+    //   ctx.drawImage(img, 0, 0);
+    // }
+
+
     // step 1 : get blob from image
+
+
 
     function blob_from_img() {
         const image = document.getElementById("myimg");
+        console.log("width is");
+
+        const imageObj = new Image();
         console.log(image);
-        const canvas = document.createElement("canvas");
-        const context = canvas.getContext("2d");
-        console.log("context created");
-        console.log(context);
-        context.drawImage(image, 0, 0, image.width, image.height);
-        const blob = canvas.toDataURL("image/png");
-        console.log(blob);
-        return blob;
+        var src = "";
+        image.onload = function () {
+            const canvas = document.getElementById("can");
+            // canvas.offsetWidth =image.clientWidth;
+            // canvas.offsetHeight = image.clientHeight;
+            // imageObj.onload = function(){
+            const context = canvas.getContext("2d");
+            console.log("image width is ", image.width);
+
+            context.fillRect(0, 0, image.width, image.height);
+            console.log("filled rectangle");
+
+            context.drawImage(image, 0, 0, image.width, image.height,
+                0, 0, canvas.width, canvas.height);
+            src = canvas.toDataURL("image/png");
+            imageObj.src = src;
+            console.log(src)
+            console.log(imageObj);
+
+            var block = src.split(";");
+            // Get the content type of the image
+            var contentType = block[0].split(":")[1];// In this case "image/gif"
+            // get the real base64 content of the file
+            var realData = block[1].split(",")[1];// In this case "R0lGODlhPQBEAPeoAJosM...."
+
+            // Convert it to a blob to upload
+            var blob = b64toBlob(realData, "png");
+            postImage(blob);
+        }
+
     }
-    // blog_from_img();
+
+    blob_from_img();
 
     // step 2 : post blob to server (AWS)
     async function postImage(blob) {
+        console.log("imhere");
         const form_data = new FormData();
         const myHeaders = new Headers();
         myHeaders.append("Authorization", "Basic c3JpbmF0aDpzcm50aHNyZGhybg==");
-        myHeaders.append("Content-Type", "multipart/form-data;");
+        // myHeaders.append("Content-Type", "multipart/form-data;");
         // myHeaders.append("Access-Control-Allow-Origin","true");  
         // myHeaders.append("Accept","*/*");        
         // myHeaders.append("Access-Control-Allow-Credentials","true");        
         // myHeaders.append("Accept-Encoding","gzip, deflate, br");        
         // myHeaders.append("mode","no-cors");
-        form_data.append("image_1", blob);
 
+        form_data.append("image_1", blob);
+        for (var i of form_data.entries()) {
+            console.log(i[0] + ":" + typeof (i[1]));
+        }
         var requestOptions = {
             method: 'POST',
             headers: myHeaders,
             body: form_data,
             redirect: 'follow'
         };
-        const response = await fetch("http://Heimdall-280442718.ap-south-1.elb.amazonaws.com/predict_user/",requestOptions)
-        
+        const response = await fetch("http://Heimdall-280442718.ap-south-1.elb.amazonaws.com/predict_user/", requestOptions)
+
         const result = await response.text();
         console.log(result);
     }
 
 
-    postImage(blob_from_img());
 
-    // we'll run ?yes
+    function b64toBlob(b64Data, contentType, sliceSize) {
+        contentType = contentType || '';
+        sliceSize = sliceSize || 512;
+
+        var byteCharacters = atob(b64Data);
+        var byteArrays = [];
+
+        for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+            var slice = byteCharacters.slice(offset, offset + sliceSize);
+
+            var byteNumbers = new Array(slice.length);
+            for (var i = 0; i < slice.length; i++) {
+                byteNumbers[i] = slice.charCodeAt(i); 
+            }
+
+            var byteArray = new Uint8Array(byteNumbers);
+
+            byteArrays.push(byteArray);
+        }
+
+        var blob = new Blob(byteArrays, { type: contentType });
+        return blob;
+    }
+
+
 </script>
 
 </html>
