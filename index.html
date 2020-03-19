@@ -8,6 +8,11 @@
   <script defer src="face-api.min.js"></script> 
   <script defer src="predict_user.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
   <style>
     body {
       margin: 0;
@@ -22,21 +27,35 @@
 
     canvas {
       position: absolute;
+      border:2px solid green;
     }
 
     video{
       position: absolute;
-      padding-bottom:30px;
+    
     }
     img{
+
       align-self: flex-start;
       border:2px solid brown;
+    }
+
+    #img-container{
+    margin-top:50%;
     }
   </style>
 </head>
 <body>
-  <video id="video" width="720" height="560" autoplay muted></video>
-  <img src="" id="pic" width="720" height="560" alt="">
+  <div class="container" >
+    <div id="vid-container" class="row">
+  
+      <video id="video" width="720" height="560" autoplay muted>dsf</video>    
+    </div>
+    <div id="img-container" class="row" > 
+      <img src="" id="pic" width="720" height="560" alt="">
+      <h1 id="user"></h1>
+    </div>
+  </div>
 </body>
 </html>
 
