@@ -59,10 +59,16 @@ video.addEventListener('play', () => {
         // }
 
       // faceapi.draw.drawDetections(canvas, resizedDetections);
-      const box = resizedDetections[0].detection.box
-      const drawBox = new faceapi.draw.DrawBox(box, { label: resp.message })
-      drawBox.draw(canvas)
-        setTimeout(function(){},100);
+      resizedDetections.array.forEach(element => {
+        const box = element.detection.box
+        const drawBox = new faceapi.draw.DrawBox(box, { label: resp.message })
+        drawBox.draw(canvas)
+      });
+      
+      
+      setTimeout(function(){},100);
+
+
       }
   }, 80)
 })
