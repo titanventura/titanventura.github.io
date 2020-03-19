@@ -1,5 +1,5 @@
 const video = document.getElementById('video')
-
+var can_snap =true;
 Promise.all([
 	faceapi.nets.tinyFaceDetector.loadFromUri('/models')
 ]).then(startVideo)
@@ -14,6 +14,9 @@ function startVideo() {
 
 var i = 0;
 video.addEventListener('play',async () => {
+	video.width = window.innerWidth*2/3;
+	video.height = window.innerHeight*2/3;
+	console.log(window.innerWidth);
 	const canvas = faceapi.createCanvasFromMedia(video)
 	document.getElementById("vid-container").append(canvas)
 	const displaySize = { width: video.width, height: video.height }
@@ -24,15 +27,15 @@ video.addEventListener('play',async () => {
 
 		// To detect single face.
 		const detection = await faceapi.detectSingleFace(video, new faceapi.TinyFaceDetectorOptions());
-		canvas.getContext('2d').clearRect(0, 0, video.width, video.height);
-		if (detection != null) 
+		
+		if (detection != null && can_snap == true) 
 		{
 			// Should be only here.. not anywhere else
 			const resizedDetections = faceapi.resizeResults(detection, displaySize);
 			
 			// const blob = canvas.toDataURL("image/png");
 
-			const imageObj = document.getElementById("pic");
+			const imageObj = new Image();
 			const context = canvas.getContext("2d");
 			context.drawImage(video, 0, 0, video.width, video.height);
 			var src = "";
@@ -47,19 +50,23 @@ video.addEventListener('play',async () => {
 			// Convert it to a blob to upload
 			var blob = b64toBlob(realData, "png");
 			console.log(detection);
+			can_snap = false
 			postImage(blob).then(res=>{
 				if (res.user != null) {
-					const box = detection._box
-					const drawBox = new faceapi.draw.DrawBox(box, { label: res.user ,boxColor : "gree"})
+					const box = resizedDetections._box
+					const drawBox = new faceapi.draw.DrawBox(box, { label: res.user ,boxColor : "green" ,lineWidth:5, drawLabelOptions:{fontSize:25}})
 					drawBox.draw(canvas)
+					can_snap = true
 				}
 				else if (res.user == null) {
-					const box = detection._box
-					const drawBox = new faceapi.draw.DrawBox(box, { label: "searching" })
+					const box = resizedDetections._box
+					const drawBox = new faceapi.draw.DrawBox(box, { label: "searching",boxColor:"red",lineWidth:5 ,drawLabelOptions:{fontSize:25}})
 					drawBox.draw(canvas)
+					can_snap = true
 				}
 			})
-			setTimeout(()=>{},100);
+			canvas.getContext('2d').clearRect(0, 0, video.width, video.height);
+			// setTimeout(()=>{},100);
 			// face detector only.
 			// faceapi.draw.drawDetections(canvas, resizedDetections);
 		}

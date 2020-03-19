@@ -21,10 +21,10 @@ function startVideo() {
 }
 
 
-
 var array = [];
 var i = 0;
 video.addEventListener('play', () => {
+
   const canvas = faceapi.createCanvasFromMedia(video)
   document.getElementById("vid").append(canvas)
   const displaySize = { width: video.width , height: video.height }
