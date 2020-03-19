@@ -14,7 +14,7 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
   <style>
-    body {
+    /* body {
       margin: 0;
       padding: 0;
       width: 100vw;
@@ -47,7 +47,51 @@
 
     #img-container{
     margin-top:50%;
+    } */
+
+    html,body {
+    width:100vw;
+    height: 100vh;
+    margin: 0;
+}
+
+
+canvas{
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+video{
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+    z-index: -1;
+}
+@media (min-aspect-ratio: 16/9) {
+  video {
+        width:100%;
+        height: auto;
     }
+}
+@media (max-aspect-ratio: 16/9) {
+    video { 
+        width:auto;
+        height: 100%;
+    }
+}
+@media (max-width: 767px) {
+    video {
+        display: none;
+    }
+    body {
+        background-size: cover;
+    }
+}
+
+
+
+
   </style>
 </head>
 <body>
