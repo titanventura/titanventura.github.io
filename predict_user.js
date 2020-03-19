@@ -27,7 +27,8 @@ video.addEventListener('play', () => {
     const detections = await faceapi.detectAllFaces(video, new faceapi.TinyFaceDetectorOptions());
     const resizedDetections = faceapi.resizeResults(detections, displaySize);
     canvas.getContext('2d').clearRect(0, 0, video.width, video.height);
-    if (detections.length > 0 && resizedDetections.length > 0) {
+   
+    if (detections.length > 0) {
       // const blob = canvas.toDataURL("image/png");
       const imageObj = document.getElementById("pic");
       var src = "";
@@ -48,28 +49,12 @@ video.addEventListener('play', () => {
         // Convert it to a blob to upload
         var blob = b64toBlob(realData, "png");
         
-        let resp = postImage(blob);
-        setTimeout(function(){},500);
-        // results.forEach((bestMatch, i) => {
-        //   const box = fullFaceDescriptions[i].detection.box
-        //   const text = bestMatch.toString()
-        //   const drawBox = new faceapi.draw.DrawBox(box, { label: text })
-        //   drawBox.draw(canvas)
-        // })
-
+        postImage(blob);
         // }
-
-      // faceapi.draw.drawDetections(canvas, resizedDetections);
-        const box = resizedDetections[0].detection._box;
-        const drawBox = new faceapi.draw.DrawBox(box, { label: resp.message })
-        drawBox.draw(canvas);
-      
-      
-      
-
-
+      faceapi.draw.drawDetections(canvas, resizedDetections);
+        setTimeout(function(){},200);
       }
-  }, 80)
+  }, 100)
 })
 
 function saveFrame(blob) {
