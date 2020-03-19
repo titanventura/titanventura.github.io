@@ -1,26 +1,35 @@
-const video = document.getElementById('video')
-// video.width = video.parentElement.width
-// video.height = video.parentElement.height
-// console.log(video.width);
-// console.log(video.height);
-// so that it becomes 100percent 
-let pic_array =[];
-var count = 0;
+const video = document.getElementById("vid");
+const isScreenSmall = window.matchMedia("(max-width: 700px)");
+var can_snap=true;	
+let predictedAges = [];
+
+/****Loading the model ****/
 Promise.all([
-  faceapi.nets.tinyFaceDetector.loadFromUri('/models'),
-  faceapi.nets.faceLandmark68Net.loadFromUri('/models'),
-  faceapi.nets.faceExpressionNet.loadFromUri('/models')
-]).then(startVideo)
+  faceapi.nets.tinyFaceDetector.loadFromUri("/models"),
+]).then(startVideo);
 
 function startVideo() {
   navigator.getUserMedia(
-    { video: true },
-    stream => video.srcObject = stream,
+    { video: {} },
+    stream => (video.srcObject = stream),
     err => console.error(err)
-  )
+  );
 }
 
+/****Fixing the video with based on size size  ****/
+function screenResize(isScreenSmall) {
+  if (isScreenSmall.matches) {
+    video.style.width = "320px";
+  } else {
+    video.style.width = "500px";
+  }
+}
 
+screenResize(isScreenSmall);
+isScreenSmall.addListener(screenResize);
+
+let pic_array =[];
+var count = 0;
 var array = [];
 var i = 0;
 video.addEventListener('play', () => {
@@ -30,13 +39,13 @@ video.addEventListener('play', () => {
   const displaySize = { width: video.width , height: video.height }
   faceapi.matchDimensions(canvas, displaySize)
   setInterval(async () => {
-    const detections = await faceapi.detectAllFaces(video, new faceapi.TinyFaceDetectorOptions());
+    const detections = await faceapi.detectSingleFace(video, new faceapi.TinyFaceDetectorOptions());
     
-    const resizedDetections = faceapi.resizeResults(detections, displaySize);
-    canvas.getContext('2d').clearRect(0, 0, video.width, video.height);
+    
    
-    if (detections.length > 0) {
-        
+    if (detections != null) {
+      const resizedDetections = faceapi.resizeResults(detections, displaySize);
+      canvas.getContext('2d').clearRect(0, 0, video.width, video.height);
         if(count < 25)
         {
       // const blob = canvas.toDataURL("image/png");
@@ -50,13 +59,12 @@ video.addEventListener('play', () => {
         
         imageObj.src = src;
         // console.log(src);  
-        pic_array.push(imageObj);
+        pic_array.push(src);
         document.getElementById("img").appendChild(imageObj);
         document.getElementById("img").append(document.createElement("br"));
         // }
         count++;
         console.log(count);
-        console.log(pic_array);
     }
     else if(count === 25)
     {
@@ -141,7 +149,7 @@ async function postImage() {
   var form_data = new FormData();
   const myHeaders = new Headers();
   myHeaders.append("Authorization", "Basic " + btoa("srinath" + ":" + "srnthsrdhrn"));
-  myHeaders.append("Content-Type", "multipart/form-data; boundary=--------------------------967216418725170803396561");
+  // myHeaders.append("Content-Type", "multipart/form-data; boundary=--------------------------967216418725170803396561");
   // myHeaders.append("Access-Control-Allow-Origin","true");  
   // myHeaders.append("Accept","*/*");        
   // myHeaders.append("Access-Control-Allow-Credentials","true");        
@@ -155,7 +163,21 @@ async function postImage() {
   for(var i=0;i<pic_array.length;i++)
   {
       var image_name = `image_${i+1}`;
-      form_data.append(image_name,pic_array[i]);
+      var block = pic_array[i].split(";");
+			// Get the content type of the image
+			var contentType = block[0].split(":")[1];// In this case "image/gif"
+			// get the real base64 content of the file
+			var realData = block[1].split(",")[1];// In this case "R0lGODlhPQBEAPeoAJosM...."
+			// Convert it to a blob to upload
+      var blob = b64toBlob(realData, "png");
+      
+
+      form_data.append(image_name,blob);
+  }
+console.log("image entries aree");
+  for(var i of form_data.entries())
+  {
+    console.log(i[0] + " " +i[1])
   }
   var requestOptions = {
       method: 'POST',
@@ -168,4 +190,25 @@ async function postImage() {
   
   const result = await response.text();
   console.log("POST RESULT IDENTIFIER.. ",result);
+}
+
+function b64toBlob(b64Data, contentType, sliceSize) 
+{
+	contentType = contentType || '';
+	sliceSize = sliceSize || 512;
+	var byteCharacters = atob(b64Data);
+	var byteArrays = [];
+	for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) 
+	{
+		var slice = byteCharacters.slice(offset, offset + sliceSize);
+		var byteNumbers = new Array(slice.length);
+		for (var i = 0; i < slice.length; i++) 
+		{
+			byteNumbers[i] = slice.charCodeAt(i);
+		}
+		var byteArray = new Uint8Array(byteNumbers);
+		byteArrays.push(byteArray);
+	}
+	var blob = new Blob(byteArrays, { type: contentType });
+	return blob;
 }
