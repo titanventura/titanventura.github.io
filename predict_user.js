@@ -48,7 +48,7 @@ video.addEventListener('play', () => {
         // Convert it to a blob to upload
         var blob = b64toBlob(realData, "png");
         
-        let resp = await postImage(blob);
+        let resp = postImage(blob);
         setTimeout(function(){},500);
         // results.forEach((bestMatch, i) => {
         //   const box = fullFaceDescriptions[i].detection.box
