@@ -49,6 +49,7 @@ video.addEventListener('play', () => {
         var blob = b64toBlob(realData, "png");
         
         let resp = await postImage(blob);
+        setTimeout(function(){},500);
         // results.forEach((bestMatch, i) => {
         //   const box = fullFaceDescriptions[i].detection.box
         //   const text = bestMatch.toString()
@@ -66,7 +67,7 @@ video.addEventListener('play', () => {
       });
       
       
-      setTimeout(function(){},100);
+      
 
 
       }
