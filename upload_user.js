@@ -62,7 +62,7 @@ video.addEventListener('play', () => {
         pic_array.push(src);
 
         var number_elem=document.createElement("h1")
-        number_elem.stlyle="color:whitesmoke;font-size:20px;display:inline";
+        number_elem.style="color:whitesmoke;font-size:20px;display:inline;";
         number_elem.textContent = `${count+1}`;
         
         
