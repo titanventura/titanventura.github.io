@@ -69,7 +69,7 @@ video.addEventListener('play', () => {
         var divcont = document.createElement("div")
         divcont.append(number_elem);
         divcont.append(imageObj);
-
+        console.log(divcont);
         document.getElementById("img").append(divcont);
         document.getElementById("img").append(document.createElement("br"));
         // }
