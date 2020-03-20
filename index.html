@@ -124,6 +124,11 @@ canvas {
 }
 video {
   width: 100%;
+  -o-transform : scaleX(-1);
+  -moz-transform : scaleX(-1);
+  -webkit-transform : scaleX(-1);
+  -ms-transform: scaleX(-1);
+  transform : scaleX(-1);
 }
 header {
   background: #42a5f5;
@@ -139,6 +144,8 @@ header {
   </style>
 </head>
 <body>
+  <p><big>Attendance</big></p>
+
     <div id="containerr">
       <video id="video" height="500" width="500" autoplay muted></video>    
     </div>

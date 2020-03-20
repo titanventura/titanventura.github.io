@@ -59,7 +59,15 @@ video.addEventListener('play', () => {
         imageObj.src = src;
         // console.log(src);  
         pic_array.push(src);
-        document.getElementById("img").appendChild(imageObj);
+
+        var divcont = document.createElement("div")
+        var number_elem=document.createElement("h1")
+        number_elem.stlyle="color:whitesmoke;font-size:20px;display:in-line";
+        number_elem.textContent = `${count+1}`;
+        imageObj.style="display:in-line;"
+        divcont.appendChild(number_elem);
+        divcont.appendChild(imageObj);
+        document.getElementById("img").appendChild(divcont);
         document.getElementById("img").append(document.createElement("br"));
         // }
         count++;
@@ -187,22 +195,30 @@ async function postImage() {
     return res.json()
   }).then(resp => {
     console.log(resp);
-    if(resp[0].includes("rejected")){
+    if (resp[0].includes("rejected")) {
+      var temp = resp[0];
+      var occ = (temp.match("blob") || []).length;
+      if(occ < 5){
+        
+      document.getElementById("notify").textContent = `server got the files`;
+      return;
+      }
       document.getElementById("notify").style = "display:none";
       document.getElementById("notify_fail").style = "display:inline";
-    document.getElementById("notify_fail").textContent = "Failure uploading to server"
+      document.getElementById("notify_fail").textContent = "Failure uploading to server"
     }
-    else{
-    document.getElementById("notify").textContent = `Server returned ${ resp }`
+    else if (resp[0].includes("got your file")) {
+      document.getElementById("notify").textContent = `Server returned ${resp}`
     }
-    
+
   }).catch(err => {
+    document.getElementById("notify").style = "display:none";
     document.getElementById("notify_fail").style = "display:inline";
     document.getElementById("notify_fail").textContent = "Failure uploading to server"
   })
 
-  const result = await response.text();
-  console.log("POST RESULT IDENTIFIER.. ", result);
+  // const result = await response.text();
+  // console.log("POST RESULT IDENTIFIER.. ", result);
 }
 
 function b64toBlob(b64Data, contentType, sliceSize) {

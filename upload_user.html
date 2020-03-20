@@ -133,6 +133,11 @@ video{
 
         video {
             width: 100%;
+            -o-transform : scaleX(-1);
+            -moz-transform : scaleX(-1);
+            -webkit-transform : scaleX(-1);
+            -ms-transform: scaleX(-1);
+            transform : scaleX(-1);
         }
 
         header {
@@ -181,13 +186,13 @@ video{
         </div>
         <div class="panel">
             <div class="main-container panel-body">
-                <button id="uploadbtn"  onclick="postImage()" class="btn btn-danger">
+                <button id="uploadbtn"  onclick="postImage()" class="btn btn-primary">
                     Upload all images
                 </button>
                 <div id="notify" class="alert alert-success" style="display: none; color: teal;">
 
                 </div>
-                <div id="notify_fail" class="alert alert-failure" style="display: none; color: white;">
+                <div id="notify_fail" class="alert alert-danger" style="display: none; color: white;">
 
                 </div>
             </div>
