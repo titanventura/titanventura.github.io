@@ -65,9 +65,9 @@ video.addEventListener('play', () => {
         number_elem.stlyle="color:whitesmoke;font-size:20px;display:in-line";
         number_elem.textContent = `${count+1}`;
         imageObj.style="display:in-line;"
-        divcont.appendChild(number_elem);
-        divcont.appendChild(imageObj);
-        document.getElementById("img").appendChild(divcont);
+        divcont.append(number_elem);
+        divcont.append(imageObj);
+        document.getElementById("img").append(divcont);
         document.getElementById("img").append(document.createElement("br"));
         // }
         count++;
