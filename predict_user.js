@@ -32,6 +32,7 @@ var i = 0;
 video.addEventListener('play', async () => {
 	// video.width = window.innerWidth;
 	// video.height = window.innerHeight;
+	var can_break = false;
 	console.log(window.innerWidth);
 	const canvas = faceapi.createCanvasFromMedia(video)
 	document.getElementById("containerr").append(canvas)
@@ -53,6 +54,7 @@ video.addEventListener('play', async () => {
 			const imageObj = new Image();
 			const context = canvas.getContext("2d");
 			context.drawImage(video, 0, 0, video.width, video.height);
+
 			var src = "";
 			src = canvas.toDataURL("image/jpeg");
 			imageObj.src = src;
@@ -66,25 +68,35 @@ video.addEventListener('play', async () => {
 			var blob = b64toBlob(realData, "png");
 			console.log(detection);
 			can_snap = false
+			
+			canvas.getContext('2d').clearRect(0, 0, video.width, video.height);
 			postImage(blob).then(res => {
 				if (res.user != null) {
-					const box = detection._box
+					can_break  = true;
+					const box = resizedDetections._box
 					const drawBox = new faceapi.draw.DrawBox(box, { label: res.user, boxColor: "green", lineWidth: 5, drawLabelOptions: { fontSize: 25 } })
 					drawBox.draw(canvas)
+					
 					can_snap = true
 				}
 				else if (res.user == null) {
-					const box = detection._box
-					const drawBox = new faceapi.draw.DrawBox(box, { label: "searching", boxColor: "red", lineWidth: 5, drawLabelOptions: { fontSize: 25 } })
-					drawBox.draw(canvas)
+					// const box = resizedDetections._box
+					// const drawBox = new faceapi.draw.DrawBox(box, { label: "searching", boxColor: "red", lineWidth: 5, drawLabelOptions: { fontSize: 25 } })
+					// drawBox.draw(canvas)
 					can_snap = true
 				}
 			})
-			canvas.getContext('2d').clearRect(0, 0, video.width, video.height);
+			
+			if(can_break)
+			{
+				break;
+			}
+			// faceapi.draw.drawDetections(canvas, resizedDetections); // blue
+
 			// setTimeout(()=>{},100);
 			// face detector only.
-			// faceapi.draw.drawDetections(canvas, resizedDetections);
 		}
+		video.pause();
 	}
 })
 
@@ -150,7 +162,7 @@ async function postImage(blob) {
 	return response;
 
 	// ---- FETCH request ----
-	// const response = await fetch("https://heimdall.iqube.io/predict_user/",requestOptions)
+	// const response = await fetch("http://10.1.76.101:8000/predict_user/",requestOptions)
 	// const result = await response.text();
 	// console.log("POST RESULT IDENTIFIER.. ",result);
 }

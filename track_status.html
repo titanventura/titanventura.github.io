@@ -97,7 +97,7 @@
             body: ""
         }
         var chrn_id;
-        fetch("https://heimdall.iqube.io/train_models/", request_options).then(res => {
+        fetch("http://10.1.76.101:8000/train_models/", request_options).then(res => {
             return res.json()
         }).then(result => {
             msg_container.textContent = "Training ID recieved";
@@ -131,7 +131,7 @@
                 method: "GET",
                 headers: myHeaders,
             }
-            var uri = `https://heimdall.iqube.io/get_training_status?chronology_id=${id}`;
+            var uri = `http://10.1.76.101:8000/get_training_status?chronology_id=${id}`;
             fetch(uri, request_options).then(res => {
                 return res.json()
             }).then(result => {

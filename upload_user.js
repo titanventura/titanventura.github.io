@@ -194,7 +194,7 @@ async function postImage() {
     //   redirect: 'follow'
   };
   console.log(form_data);
-  fetch("https://heimdall.iqube.io/upload_images/", requestOptions).then(res => {
+  fetch("http://10.1.76.101:8000/upload_images/", requestOptions).then(res => {
     return res.json()
   }).then(resp => {
     console.log(resp);
