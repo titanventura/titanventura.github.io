@@ -29,11 +29,8 @@ screenResize(isScreenSmall);
 isScreenSmall.addListener(screenResize);
 
 var i = 0;
-video.addEventListener('play',async () => {
-	// video.width = window.innerWidth;
-	// video.height = window.innerHeight;
+video.addEventListener('play', async () => {
 	var can_break = false;
-	console.log(window.innerWidth);
 	const canvas = faceapi.createCanvasFromMedia(video)
 	document.getElementById("containerr").append(canvas)
 	const displaySize = { width: video.width, height: video.height }
@@ -45,12 +42,12 @@ video.addEventListener('play',async () => {
 		// To detect single face.
 		const detection = await faceapi.detectSingleFace(video, new faceapi.TinyFaceDetectorOptions());
 
+		
 		if (detection != null && can_snap == true) {
 			// Should be only here.. not anywhere else
 			const resizedDetections = faceapi.resizeResults(detection, displaySize);
 
-			// const blob = canvas.toDataURL("image/png");
-
+			canvas.getContext('2d').clearRect(0, 0, video.width, video.height);
 			const imageObj = new Image();
 			const context = canvas.getContext("2d");
 			context.drawImage(video, 0, 0, video.width, video.height);
@@ -66,19 +63,23 @@ video.addEventListener('play',async () => {
 			var realData = block[1].split(",")[1];// In this case "R0lGODlhPQBEAPeoAJosM...."
 			// Convert it to a blob to upload
 			var blob = b64toBlob(realData, "png");
+
 			console.log(detection);
+
 			can_snap = false
+
 			
-			canvas.getContext('2d').clearRect(0, 0, video.width, video.height);
+
 			postImage(blob).then(res => {
 				if (res.user != null) {
-					can_break  = true;
-					video.pause();
+					can_break = true;
+					
 					const box = resizedDetections._box
 					const drawBox = new faceapi.draw.DrawBox(box, { label: res.user, boxColor: "green", lineWidth: 5, drawLabelOptions: { fontSize: 25 } })
 					drawBox.draw(canvas)
 					
 					can_snap = true
+					
 				}
 				else if (res.user == null) {
 					// const box = resizedDetections._box
@@ -87,18 +88,20 @@ video.addEventListener('play',async () => {
 					can_snap = true
 				}
 			})
-			
-			if(can_break)
-			{
+
+			if (can_break) {
+				video.pause();
 				break;
 			}
 			// faceapi.draw.drawDetections(canvas, resizedDetections); // blue
-
-			// setTimeout(()=>{},100);
-			// face detector only.
 		}
 		
+		await setTimeout(() => {
+			can_break=false;
+			video.play();
+		}, 2000)
 	}
+	
 })
 
 function b64toBlob(b64Data, contentType, sliceSize) {
