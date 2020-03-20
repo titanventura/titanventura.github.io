@@ -68,7 +68,8 @@
         </form>
 
         <div id="result-container">
-
+            <div id="new_div">
+            </div>
         </div>
     </div>
 </body>
@@ -91,7 +92,7 @@
 <script>
     function showMessage(val, message = "Please enter valid credentials") {
         const res_div = document.getElementById("result-container");
-        const new_div = document.createElement("div")
+        const new_div = document.getElementById("new_div")
         if (val == 0) {
             new_div.classList.add("alert", "alert-danger")
         }
