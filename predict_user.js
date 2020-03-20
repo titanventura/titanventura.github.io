@@ -29,7 +29,7 @@ screenResize(isScreenSmall);
 isScreenSmall.addListener(screenResize);
 
 var i = 0;
-video.addEventListener('play', async () => {
+video.addEventListener('play', () => {
 	// video.width = window.innerWidth;
 	// video.height = window.innerHeight;
 	var can_break = false;
@@ -73,6 +73,7 @@ video.addEventListener('play', async () => {
 			postImage(blob).then(res => {
 				if (res.user != null) {
 					can_break  = true;
+					video.pause();
 					const box = resizedDetections._box
 					const drawBox = new faceapi.draw.DrawBox(box, { label: res.user, boxColor: "green", lineWidth: 5, drawLabelOptions: { fontSize: 25 } })
 					drawBox.draw(canvas)
@@ -96,7 +97,7 @@ video.addEventListener('play', async () => {
 			// setTimeout(()=>{},100);
 			// face detector only.
 		}
-		video.pause();
+		
 	}
 })
 
