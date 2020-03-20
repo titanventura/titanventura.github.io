@@ -29,7 +29,7 @@ screenResize(isScreenSmall);
 isScreenSmall.addListener(screenResize);
 
 var i = 0;
-video.addEventListener('play', () => {
+video.addEventListener('play',async () => {
 	// video.width = window.innerWidth;
 	// video.height = window.innerHeight;
 	var can_break = false;
