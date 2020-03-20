@@ -57,16 +57,19 @@ video.addEventListener('play', () => {
         src = canvas.toDataURL("image/jpeg");
 
         imageObj.src = src;
+        imageObj.style="display:inline;"
         // console.log(src);  
         pic_array.push(src);
 
-        var divcont = document.createElement("div")
         var number_elem=document.createElement("h1")
-        number_elem.stlyle="color:whitesmoke;font-size:20px;display:in-line";
+        number_elem.stlyle="color:whitesmoke;font-size:20px;display:inline";
         number_elem.textContent = `${count+1}`;
-        imageObj.style="display:in-line;"
+        
+        
+        var divcont = document.createElement("div")
         divcont.append(number_elem);
         divcont.append(imageObj);
+
         document.getElementById("img").append(divcont);
         document.getElementById("img").append(document.createElement("br"));
         // }
