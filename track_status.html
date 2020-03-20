@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Show training status</title>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href=".">Image KCT</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
+            aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav">
+                <a class="nav-item nav-link active" href="./create_user.html">Create User</a>
+                <a class="nav-item nav-link" href="./index.html">Predict User</a>
+                <a class="nav-item nav-link" href="./upload_user.html">Upload User Images</a>
+                <a class="nav-item nav-link" href="./track_status.html">Track Training Status</a>
+            </div>
+        </div>
+    </nav>
+
+
+    <div class="container">
+        <button class="btn-lg btn btn-primary" id="train-btn">
+            Train Latest Model
+        </button>
+        <div id="message-container">
+
+        </div>
+        <div id="result-container">
+            <div id="details">
+                <h1>
+                    Chronology ID : <span id="chronology_id"></span>
+                </h1>
+            </div>
+            <div id="status-container">
+                <h3>Status : <span id="status"></span></h3><br>
+                <h3>Message : <span id="msg"></span></h3><br>
+                <h3>Training status : <span id="trn_status"></span></h3><br>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
+
+<style>
+    body {
+        height: 100vh;
+    }
+
+    .container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+    }
+
+    span {
+        color: teal;
+    }
+</style>
+
+<script>
+
+    $("#train-btn").click(function (e) {
+        var msg_container = document.getElementById("message-container");
+        msg_container.classList.add("alert", "alert-success");
+        msg_container.textContent = "Recieving traing id and status ...";
+
+        var myHeaders = new Headers({
+            "Authorization": "Basic " + btoa("srinath" + ":" + "srnthsrdhrn")
+        })
+        var request_options = {
+            method: "POST",
+            headers: myHeaders,
+            body: ""
+        }
+        var chrn_id;
+        fetch("https://heimdall.iqube.io/train_models/", request_options).then(res => {
+            return res.json()
+        }).then(result => {
+            msg_container.textContent = "Training ID recieved";
+            chrn_id = result.chronology_id;
+            document.getElementById("chronology_id").textContent = chrn_id;
+            console.log(result)
+            showStatusConstantly(chrn_id);
+        }).catch(err => {
+            msg_container.classList.replace("alert-success", "alert-danger");
+            msg_container.textContent = err;
+        })
+
+    });
+
+
+    function showStatusConstantly(chrn_id) {
+        console.log(chrn_id);
+        var status = document.getElementById("status");
+        var msg = document.getElementById("msg");
+        var trn_status = document.getElementById("trn_status");
+        var id = chrn_id;
+        var myinterval = setInterval(function () {
+            console.log("here");
+
+            document.getElementById("message-container").textContent = "Recieving statuses";
+            var myHeaders = new Headers({
+                "Authorization": "Basic " + btoa("srinath" + ":" + "srnthsrdhrn")
+            })
+
+            var request_options = {
+                method: "GET",
+                headers: myHeaders,
+            }
+            var uri = `https://heimdall.iqube.io/get_training_status?chronology_id=${id}`;
+            fetch(uri, request_options).then(res => {
+                return res.json()
+            }).then(result => {
+                
+            document.getElementById("message-container").textContent = "Statuses recieved";
+                status.textContent = result.status
+                msg.textContent = result.message
+                trn_status.textContent = result.train_status
+
+                if(result.message.includes("completed"))
+                {
+                    document.getElementById("message-container").textContent = "All done";
+                    clearInterval(myinterval);
+                }
+            }).catch(err => {
+                var msg_cont = document.getElementById("message-container");
+                msg_cont.classList.replace("alert-success", "alert-danger");
+                msg_cont.textContent = err;
+            })
+
+        }, 5000);
+    }
+</script>

@@ -57,7 +57,7 @@ video.addEventListener('play', () => {
         src = canvas.toDataURL("image/jpeg");
 
         imageObj.src = src;
-        imageObj.style="display:inline;float:right;width:75%;height:45vh;"
+        imageObj.style="display:inline;float:right;width:75%;height:35vh;"
         // console.log(src);  
         pic_array.push(src);
 

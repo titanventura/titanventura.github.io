@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create a new user</title>
+
+    <!-- JQUERY and BOOTSTRAP imports -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href=".">Image KCT</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
+            aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav">
+                <a class="nav-item nav-link active" href="./create_user.html">Create User</a>
+                <a class="nav-item nav-link" href="./index.html">Predict User</a>
+                <a class="nav-item nav-link" href="./upload_user.html">Upload User Images</a>
+                <a class="nav-item nav-link" href="./track_status.html">Track Training Status</a>
+            </div>
+        </div>
+    </nav>
+
+
+    <div class="container">
+        <form class="form" id="create_user_form" method="post">
+            <div class="container">
+                <div class="form-group ">
+                    <label for="username">Enter Username Here</label>
+                    <input type="text" class="form-control" id="username" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="first_name">Enter First Name</label>
+                    <input type="text" class="form-control" id="first_name" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Enter Email Address</label>
+                    <input type="email" class="form-control" id="email" required>
+                </div>
+
+                <div class="form-group">
+                    <button class="btn btn-primary" type="submit" id="submit_button">
+                        Create User
+                    </button>
+                </div>
+            </div>
+        </form>
+
+        <div id="result-container">
+
+        </div>
+    </div>
+</body>
+
+</html>
+
+<style>
+    body {
+        height: 100vh;
+    }
+    .container{
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+</style>
+
+<script>
+    function showMessage(val, message = "Please enter valid credentials") {
+        const res_div = document.getElementById("result-container");
+        const new_div = document.createElement("div")
+        if (val == 0) {
+            new_div.classList.add("alert", "alert-danger")
+        }
+        else if (val == 1) {
+            new_div.classList.add("alert", "alert-success")
+        }
+        new_div.textContent = message;
+        res_div.append(new_div);
+    }
+
+    $("#create_user_form").submit((event) => {
+        console.log("im here")
+        event.preventDefault();
+        if ($("#username").val().length > 0 && $("#first_name").val().length > 0 && $("#email").val().length > 0) {
+            showMessage(1, "sending details to server . Wait");
+            var form_data = new FormData();
+            form_data.append("username", $("#username").val())
+            form_data.append("first_name", $("#first_name").val())
+            form_data.append("email", $("#email").val())
+            for(var i of form_data.entries())
+            {
+                console.log(i[0] +" "+i[1]);
+            }
+            var myHeaders = new Headers();
+            myHeaders.append("Authorization", "Basic " + btoa("srinath" + ":" + "srnthsrdhrn"));
+            var requestOptions = {
+                method: 'POST',
+                headers: myHeaders,
+                body: form_data,
+                //   redirect: 'follow'
+            };
+
+            fetch("https://heimdall.iqube.io/create_user/", requestOptions).then(res => {
+                return res.json()
+            }).then(result=>{
+                if(result.message.includes("already exists")){
+                    showMessage(0,"User already exists");
+                }
+                else{
+                showMessage(1,result.message);
+                }
+            }).catch(err=>{
+                showMessage(0,err);
+            })
+
+        }
+        else {
+            showMessage(0);
+        }
+    })
+</script>
