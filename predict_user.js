@@ -1,35 +1,35 @@
 const video = document.getElementById("video");
 const isScreenSmall = window.matchMedia("(max-width: 700px)");
-var can_snap=true;	
+var can_snap = true;
 let predictedAges = [];
 
 /****Loading the model ****/
 Promise.all([
-  faceapi.nets.tinyFaceDetector.loadFromUri("/models"),
+	faceapi.nets.tinyFaceDetector.loadFromUri("/models"),
 ]).then(startVideo);
 
 function startVideo() {
-  navigator.getUserMedia(
-    { video: {} },
-    stream => (video.srcObject = stream),
-    err => console.error(err)
-  );
+	navigator.getUserMedia(
+		{ video: {} },
+		stream => (video.srcObject = stream),
+		err => console.error(err)
+	);
 }
 
 /****Fixing the video with based on size size  ****/
 function screenResize(isScreenSmall) {
-  if (isScreenSmall.matches) {
-    video.style.width = "320px";
-  } else {
-    video.style.width = "500px";
-  }
+	if (isScreenSmall.matches) {
+		video.style.width = "320px";
+	} else {
+		video.style.width = "500px";
+	}
 }
 
 screenResize(isScreenSmall);
 isScreenSmall.addListener(screenResize);
 
 var i = 0;
-video.addEventListener('play',async () => {
+video.addEventListener('play', async () => {
 	// video.width = window.innerWidth;
 	// video.height = window.innerHeight;
 	console.log(window.innerWidth);
@@ -37,18 +37,17 @@ video.addEventListener('play',async () => {
 	document.getElementById("containerr").append(canvas)
 	const displaySize = { width: video.width, height: video.height }
 	faceapi.matchDimensions(canvas, displaySize)
-	while(true){
+	while (true) {
 		// To Detect all faces.
 		// const detections = await faceapi.detectAllFaces(video, new faceapi.TinyFaceDetectorOptions());
 
 		// To detect single face.
 		const detection = await faceapi.detectSingleFace(video, new faceapi.TinyFaceDetectorOptions());
-		
-		if (detection != null && can_snap == true) 
-		{
+
+		if (detection != null && can_snap == true) {
 			// Should be only here.. not anywhere else
 			const resizedDetections = faceapi.resizeResults(detection, displaySize);
-			
+
 			// const blob = canvas.toDataURL("image/png");
 
 			const imageObj = new Image();
@@ -67,16 +66,16 @@ video.addEventListener('play',async () => {
 			var blob = b64toBlob(realData, "png");
 			console.log(detection);
 			can_snap = false
-			postImage(blob).then(res=>{
+			postImage(blob).then(res => {
 				if (res.user != null) {
 					const box = detection._box
-					const drawBox = new faceapi.draw.DrawBox(box, { label: res.user ,boxColor : "green" ,lineWidth:5, drawLabelOptions:{fontSize:25}})
+					const drawBox = new faceapi.draw.DrawBox(box, { label: res.user, boxColor: "green", lineWidth: 5, drawLabelOptions: { fontSize: 25 } })
 					drawBox.draw(canvas)
 					can_snap = true
 				}
 				else if (res.user == null) {
 					const box = detection._box
-					const drawBox = new faceapi.draw.DrawBox(box, { label: "searching",boxColor:"red",lineWidth:5 ,drawLabelOptions:{fontSize:25}})
+					const drawBox = new faceapi.draw.DrawBox(box, { label: "searching", boxColor: "red", lineWidth: 5, drawLabelOptions: { fontSize: 25 } })
 					drawBox.draw(canvas)
 					can_snap = true
 				}
@@ -89,18 +88,15 @@ video.addEventListener('play',async () => {
 	}
 })
 
-function b64toBlob(b64Data, contentType, sliceSize) 
-{
+function b64toBlob(b64Data, contentType, sliceSize) {
 	contentType = contentType || '';
 	sliceSize = sliceSize || 512;
 	var byteCharacters = atob(b64Data);
 	var byteArrays = [];
-	for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) 
-	{
+	for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
 		var slice = byteCharacters.slice(offset, offset + sliceSize);
 		var byteNumbers = new Array(slice.length);
-		for (var i = 0; i < slice.length; i++) 
-		{
+		for (var i = 0; i < slice.length; i++) {
 			byteNumbers[i] = slice.charCodeAt(i);
 		}
 		var byteArray = new Uint8Array(byteNumbers);
@@ -139,12 +135,18 @@ async function postImage(blob) {
 		"contentType": false,
 		"data": form_data
 	};
-	var result = await $.ajax(requestOptions).done(function (res) { 
-		console.log(res) 
+	var result = await $.ajax(requestOptions).done(function (res) {
+		console.log(res)
 	})
 
 	response = JSON.parse(result)
-	document.getElementById("user").textContent = response.message
+	if (response.user != null) {
+		document.getElementById("user").textContent = response.message + " user " + response.user
+	}
+	else {
+
+		document.getElementById("user").textContent = response.message
+	}
 	return response;
 
 	// ---- FETCH request ----
