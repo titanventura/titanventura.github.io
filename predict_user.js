@@ -96,7 +96,8 @@ video.addEventListener('play', async () => {
 			// faceapi.draw.drawDetections(canvas, resizedDetections); // blue
 		}
 		
-		await setTimeout(() => {
+		setTimeout(() => {
+			console.log("im here");
 			can_break=false;
 			video.play();
 		}, 2000)
