@@ -30,24 +30,26 @@ isScreenSmall.addListener(screenResize);
 
 var i = 0;
 video.addEventListener('play', async () => {
-	var can_break = false;
+	// video.width = window.innerWidth;
+	// video.height = window.innerHeight;
+	console.log(window.innerWidth);
 	const canvas = faceapi.createCanvasFromMedia(video)
 	document.getElementById("containerr").append(canvas)
 	const displaySize = { width: video.width, height: video.height }
 	faceapi.matchDimensions(canvas, displaySize)
-	while (true) {
+	while(true) {
 		// To Detect all faces.
 		// const detections = await faceapi.detectAllFaces(video, new faceapi.TinyFaceDetectorOptions());
 
 		// To detect single face.
 		const detection = await faceapi.detectSingleFace(video, new faceapi.TinyFaceDetectorOptions());
 
-		
 		if (detection != null && can_snap == true) {
 			// Should be only here.. not anywhere else
 			const resizedDetections = faceapi.resizeResults(detection, displaySize);
 
-			canvas.getContext('2d').clearRect(0, 0, video.width, video.height);
+			// const blob = canvas.toDataURL("image/png");
+
 			const imageObj = new Image();
 			const context = canvas.getContext("2d");
 			context.drawImage(video, 0, 0, video.width, video.height);
@@ -63,23 +65,14 @@ video.addEventListener('play', async () => {
 			var realData = block[1].split(",")[1];// In this case "R0lGODlhPQBEAPeoAJosM...."
 			// Convert it to a blob to upload
 			var blob = b64toBlob(realData, "png");
-
 			console.log(detection);
-
 			can_snap = false
-
-			
-
 			postImage(blob).then(res => {
 				if (res.user != null) {
-					can_break = true;
-					
 					const box = resizedDetections._box
 					const drawBox = new faceapi.draw.DrawBox(box, { label: res.user, boxColor: "green", lineWidth: 5, drawLabelOptions: { fontSize: 25 } })
 					drawBox.draw(canvas)
-					
 					can_snap = true
-					
 				}
 				else if (res.user == null) {
 					// const box = resizedDetections._box
@@ -88,21 +81,14 @@ video.addEventListener('play', async () => {
 					can_snap = true
 				}
 			})
+			
+			canvas.getContext('2d').clearRect(0, 0, video.width, video.height);
+				// faceapi.draw.drawDetections(canvas, resizedDetections); // blue
 
-			if (can_break) {
-				video.pause();
-				break;
-			}
-			// faceapi.draw.drawDetections(canvas, resizedDetections); // blue
+			// setTimeout(()=>{},100);
+			// face detector only.
 		}
-		
-		setTimeout(() => {
-			console.log("im here");
-			can_break=false;
-			video.play();
-		}, 2000)
 	}
-	
 })
 
 function b64toBlob(b64Data, contentType, sliceSize) {
@@ -133,7 +119,7 @@ async function postImage(blob) {
 	// myHeaders.append("Content-Type", "multipart/form-data;");
 	// myHeaders.append("Access-Control-Allow-Origin","true");  
 	// myHeaders.append("Accept","*/*");        
-	// myHeaders.append("Access-Control-Allow-Credentials","true");        
+	// myHeaders.append("Access-Control-Allow-Credentials","true");        	
 	// myHeaders.append("Accept-Encoding","gzip, deflate, br");        
 	// myHeaders.append("mode","no-cors");
 	form_data.append("image_1", blob);
@@ -158,12 +144,15 @@ async function postImage(blob) {
 
 	response = JSON.parse(result)
 	if (response.user != null) {
-		document.getElementById("user").textContent = response.message + " user " + response.user
+		document.getElementById("user").textContent = capitalize(response.user)
 	}
 	else {
 
-		document.getElementById("user").textContent = response.message
+		document.getElementById("user").textContent = capitalize(response.message)
 	}
+	setTimeout(()=>{
+		document.getElementById("user").textContent = " ";
+	},1000)
 	return response;
 
 	// ---- FETCH request ----
@@ -172,7 +161,10 @@ async function postImage(blob) {
 	// console.log("POST RESULT IDENTIFIER.. ",result);
 }
 
-
+const capitalize = (s) => {
+	if (typeof s !== 'string') return ''
+	return s.charAt(0).toUpperCase() + s.slice(1)
+  }
 // async function postData(image_data) {
 //   await $.ajax({
 //     url: 'https://heimdall.iqube.io/predict_user/', // point to server-side controller method
