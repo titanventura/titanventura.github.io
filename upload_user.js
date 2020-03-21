@@ -1,4 +1,4 @@
-const url_1 = "https://heimdall.iqube.io/";
+const url_1 = "https://heimdall.iqube.io";
 const url_2 = "http://10.1.76.101:8000/";
 
 
