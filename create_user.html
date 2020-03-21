@@ -125,7 +125,7 @@
                 //   redirect: 'follow'
             };
 
-            fetch("http://10.1.76.101:8000/create_user/", requestOptions).then(res => {
+            fetch("https://heimdall.iqube.io/create_user/", requestOptions).then(res => {
                 return res.json()
             }).then(result=>{
                 if(result.message.includes("already exists")){
