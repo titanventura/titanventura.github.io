@@ -280,8 +280,10 @@
             <br>
             <center>
             <button class="btn-lg btn btn-primary" id="train-btn">
-                Train Latest Model
-            </button> </center>
+                Get Train Status of Latest Model
+            </button> 
+            <hr style="border:2px solid brown">
+          </center>
             <br> 
             <br>
             <br> 
@@ -293,9 +295,13 @@
             <div id="result-container">
                 <div id="details">
                     <h1>
-                        Chronology ID : <span id="chronology_id"></span>
+                        Chronology ID : 
+                        <!-- <span id="chronology_id"></span> -->
+                        <input type="number" class="form-control" id="chronology_id">
                     </h1>
+                    <button id="custom_chr_btn" class="btn btn-primary">Get status for id</button>
                 </div>
+                <br><br><br><br><br>
                 <div id="status-container">
                     <h3>Status : <span id="status"></span></h3><br>
                     <h3>Message : <span id="msg"></span></h3><br>
@@ -416,7 +422,7 @@ const url_2 = "http://10.1.76.101:8000";
       }).then(result => {
           msg_container.textContent = "Training ID recieved";
           chrn_id = result.chronology_id;
-          document.getElementById("chronology_id").textContent = chrn_id;
+          document.getElementById("chronology_id").value = chrn_id;
           console.log(result)
           showStatusConstantly(chrn_id);
       }).catch(err => {
@@ -427,7 +433,14 @@ const url_2 = "http://10.1.76.101:8000";
   });
 
 
+  $("#custom_chr_btn").click(e=>{
+    var chrn_id = $("#chronology_id").val();
+    showStatusConstantly(chrn_id);
+  })
+
+
   function showStatusConstantly(chrn_id) {
+    document.getElementById("message-container").textContent = "wait...";
       console.log(chrn_id);
       var status = document.getElementById("status");
       var msg = document.getElementById("msg");
@@ -460,12 +473,18 @@ const url_2 = "http://10.1.76.101:8000";
                   document.getElementById("message-container").textContent = "All done";
                   clearInterval(myinterval);
               }
+              else if(result.message.includes("does not exist"))
+              {
+                document.getElementById("message-container").textContent = "No such id";
+                clearInterval(myinterval);
+              }
           }).catch(err => {
               var msg_cont = document.getElementById("message-container");
               msg_cont.classList.replace("alert-success", "alert-danger");
               msg_cont.textContent = err;
+              clearInterval(myinterval);
           })
-
+          setTimeout(()=>{},1000)
       }, 5000);
   }
 </script>
