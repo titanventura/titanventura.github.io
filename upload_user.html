@@ -9,7 +9,6 @@
   <meta name="description" content="">
   <meta name="author" content="">
   
-  <script src="node_modules/blueimp-file-upload/js/jquery.fileupload.js"></script>
 
   <title>Face Recognition</title>
 
@@ -298,10 +297,15 @@
           <!-- Page Heading -->
           <!-- <h1 class="h3 mb-4 text-gray-800"></h1> -->
 
-          <div class="container input-container">
+          <div id="ip_cont" class="container input-container">
+          <form id="frm">
             <label for="user_id">Enter your ID</label>
             <input class="form-control" type="text" id="user_id" required />
-            <span> Please enter valid user id</span>
+            <span id="validator" style="display: none;"> Please enter valid user id</span><br><br>
+            <button class="btn btn-primary" type="submit" id="vid_play_btn">
+              Start recording video
+            </button>
+          </form>
           </div>
             <div id="containerr">
 

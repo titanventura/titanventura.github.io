@@ -1,3 +1,7 @@
+const url_1 = "https://heimdall.iqube.io/";
+const url_2 = "http://10.1.76.101:8000/";
+
+
 const video = document.getElementById("video");
 const isScreenSmall = window.matchMedia("(max-width: 700px)");
 var can_snap = true;
@@ -132,7 +136,7 @@ async function postImage(blob) {
 		console.log(i[0] + " " + i[1]);
 	}
 	var requestOptions = {
-		"url": "https://heimdall.iqube.io/predict_user/",
+		"url": `${url_1}/predict_user/`,
 		"method": 'POST',
 		"timeout": 0,
 		"headers": {

@@ -1,3 +1,8 @@
+const url_1 = "https://heimdall.iqube.io/";
+const url_2 = "http://10.1.76.101:8000/";
+
+
+
 const video = document.getElementById("vid");
 const isScreenSmall = window.matchMedia("(max-width: 700px)");
 var can_snap = true;
@@ -5,16 +10,78 @@ let predictedAges = [];
 
 /****Loading the model ****/
 Promise.all([
-  faceapi.nets.tinyFaceDetector.loadFromUri("/models"),
-]).then(startVideo);
+  faceapi.nets.tinyFaceDetector.loadFromUri("./models"),
+]).then(() => { });
+var user_input = "";
+
 
 function startVideo() {
-  navigator.getUserMedia(
-    { video: {} },
-    stream => (video.srcObject = stream),
-    err => console.error(err)
-  );
+  
+      document.getElementById("validator").style = "display:none";
+      navigator.getUserMedia(
+        { video: {} },
+        stream => (video.srcObject = stream),
+        err => console.error(err)
+      );
+    
 }
+
+
+var callAPi = (username) => {
+  const myHeaders = new Headers();
+  myHeaders.append("Authorization", "Basic " + btoa("srinath" + ":" + "srnthsrdhrn"));
+  var req_options = {
+    method: "GET",
+    headers: myHeaders
+  }
+  fetch(`${url_1}/get_user_details?username=${username}`, req_options).then(res => {
+    console.log("Reached here");
+    return res.json()
+  }).then((resp) => {
+    var x = document.getElementById("validator")
+    x.style = "display:none"
+    if(resp.id != undefined)
+    {
+      startVideo();
+    }
+    else if(resp.message.includes("does not exist")){
+      var x = document.getElementById("validator")
+      x.innerHTML = "user does not exist"
+      x.style = "display:in-line"
+    }
+  }).catch(err => {
+    var x = document.getElementById("validator")
+    x.innerHTML = err.message
+    x.style = "display:in-line"
+    console.log(err);
+  })
+
+}
+
+
+
+
+$("#frm").submit((e) => {
+  
+  var something = document.getElementById("validator")
+  something.style="display:block"
+  something.textContent = "requesting..."
+  console.log("submit btn clicked"); 
+  e.preventDefault()
+
+  user_input = $("#user_id").val()
+  if (user_input !== "") {
+    callAPi(user_input);
+  }
+  else {
+    var x= document.getElementById("validator")
+    x.textContent = "Please enter valid user input"
+    x.style = "display:block"
+  }
+});
+
+
+
 
 /****Fixing the video with based on size size  ****/
 function screenResize(isScreenSmall) {
@@ -25,9 +92,14 @@ function screenResize(isScreenSmall) {
   }
 }
 
+
+
 screenResize(isScreenSmall);
 isScreenSmall.addListener(screenResize);
 
+
+
+// MAIN FUNCTION TO LISTEN TO THE VIDEO AND PREDICT 25 IMAGES.
 let pic_array = [];
 var count = 0;
 var array = [];
@@ -35,6 +107,7 @@ var i = 0;
 video.addEventListener('play', () => {
 
   const canvas = faceapi.createCanvasFromMedia(video)
+  canvas.id = "canvas_id"
   document.getElementById("containerr").append(canvas)
   const displaySize = { width: video.width, height: video.height }
   faceapi.matchDimensions(canvas, displaySize)
@@ -45,7 +118,7 @@ video.addEventListener('play', () => {
 
     if (detections != null) {
       const resizedDetections = faceapi.resizeResults(detections, displaySize);
-      if (count < 25) {
+      if (count < 31) {
         // const blob = canvas.toDataURL("image/png");
         const imageObj = new Image();
         var src = "";
@@ -56,102 +129,64 @@ video.addEventListener('play', () => {
         src = canvas.toDataURL("image/jpeg");
 
         imageObj.src = src;
-        // imageObj.style="display:inline;float:right;width:500px;height:35vh;"
-        // // console.log(src);  
-        // pic_array.push(src);
+        imageObj.style = "display:inline;float:right;width:500px;height:35vh;"
+        // console.log(src);  
+        pic_array.push(src);
 
-        // var number_elem=document.createElement("h1")
-        // number_elem.style="color:whitesmoke;font-size:20px;display:inline;float:left";
-        // number_elem.textContent = `${count+1}`;
-        
-        
-        // var divcont = document.createElement("div")
-        // divcont.append(number_elem);
-        // divcont.append(imageObj);
-        // console.log(divcont);
+        var number_elem = document.createElement("h1")
+        number_elem.style = "color:whitesmoke;font-size:20px;display:inline;float:left";
+        number_elem.textContent = `${count + 1}`;
 
 
-        // document.getElementById("img").append(divcont);
-        // document.getElementById("img").append(document.createElement("br"));
-        // }
+        var divcont = document.createElement("div")
+        divcont.className = "picture_cont_div"
 
-        var image = new ImageCard(count,imageObj);
-        count++;
-        console.log(count);
+        var closeBtn = document.createElement("button");
+        closeBtn.classList.add("btn", "btn-danger");
+        closeBtn.innerHTML = "X";
+        closeBtn.addEventListener("click", (e) => {
+          e.target.parentElement.remove();
+          console.log(document.getElementById("img").childElementCount);
+        });
+
+        divcont.append(closeBtn);
+        divcont.append(number_elem);
+        divcont.append(imageObj);
+        console.log(divcont);
+
+        document.getElementById("img").append(divcont);
+        document.getElementById("img").append(document.createElement("br"));
+
       }
-      else if (count === 25) {
-        video.pause();
-      }
-      console.log("here i am")
-      
+
+      count++;
+      console.log(count);
       canvas.getContext('2d').clearRect(0, 0, video.width, video.height);
       faceapi.draw.drawDetections(canvas, resizedDetections);
-
     }
+    if (count === 31) {
+      // video.pause();
+      // video.parentElement.hide();
+      stopStreamedVideo(video);
+      $("#vid").hide();
+      $("#canvas_id").hide();
+    }
+    // console.log("here i am")
+
+
   }, 200)
 })
-function renderArray(pic_array) {
-  var container = document.getElementById("#img-container");
-  for (let x = 0; x < pic_array; x++) {
-    container.appendChild(pic_array[i]);
-  }
-}
-function saveFrame(blob) {
-  array.push(blob);
-}
-
-function revokeURL(e) {
-  URL.revokeObjectURL(this.src);
-}
 
 
 
 
-async function postData(image_data) {
-  await $.ajax({
-    url: 'https://heimdall.iqube.io/upload_images/', // point to server-side controller method
-    dataType: 'image', // what to expect back from the server
-    cache: false,
-    contentType: false,
-    processData: false,
-    data: image_data,
-    type: 'post',
-    headers: {
-      "Authorization": "Basic " + btoa("srinath" + ":" + "srnthsrdhrn")
-    },
-    success: function (response) {
-      const p_element = document.createElement("p");
-      p_element.textContent = "data sent to server" + Date.now().toString();
-      document.querySelector("body").append(p_element);
-
-    },
-    error: function (response) {
-      const p_element = document.createElement("p");
-      p_element.textContent = "error sending data to the sever" + Date.now().toString();
-      document.querySelector("body").append(p_element);
-
-    }
-  });
-}
-
-// document.getElementById("user_id").document.addEventListener("change",(e)=>{
-//     if(e.target.value.length == 0)
-//     {
-//         $("#uploadbtn").prop("disabled",true);
-//     }
-//     else{
-//         $("#uploadbtn").prop("disabled",false);
-//     }
-// })
-
-// important function
-
+// important function to POST ALL IMAGES TO THE SERVER 
 async function postImage() {
   document.getElementById("notify").style = "display:inline";
   document.getElementById("notify").textContent = "upload started"
   console.log($("#user_id").val().length);
   if ($("#user_id").val().length == 0) {
-    console.log("no userid");
+    alert("no userid");
     $("#user_id").focus(function () {
       $(this).next("span").css("display", "border-box");
     });
@@ -165,6 +200,8 @@ async function postImage() {
   var form_data = new FormData();
   const myHeaders = new Headers();
   myHeaders.append("Authorization", "Basic " + btoa("srinath" + ":" + "srnthsrdhrn"));
+
+  
   // myHeaders.append("Content-Type", "multipart/form-data; boundary=--------------------------967216418725170803396561");
   // myHeaders.append("Access-Control-Allow-Origin","true");  
   // myHeaders.append("Accept","*/*");        
@@ -176,9 +213,11 @@ async function postImage() {
   var user_id = $("#user_id").val();
   console.log(user_id);
   form_data.append("username", user_id);
-  for (var i = 0; i < pic_array.length; i++) {
+
+  var div_cont_array = document.getElementsByClassName("picture_cont_div")
+  for (var i = 0; i < div_cont_array.length; i++) {
     var image_name = `image_${i + 1}`;
-    var block = pic_array[i].split(";");
+    var block = div_cont_array[i].lastElementChild.src.split(";");
     // Get the content type of the image
     var contentType = block[0].split(":")[1];// In this case "image/gif"
     // get the real base64 content of the file
@@ -200,17 +239,17 @@ async function postImage() {
     //   redirect: 'follow'
   };
   console.log(form_data);
-  fetch("http://10.1.76.101:8000/upload_images/", requestOptions).then(res => {
+  fetch(`${url_1}/upload_images/`, requestOptions).then(res => {
     return res.json()
   }).then(resp => {
     console.log(resp);
     if (resp[0].includes("rejected")) {
       var temp = resp[0];
       var occ = (temp.match("blob") || []).length;
-      if(occ < 5){
-        
-      document.getElementById("notify").textContent = `server got the files`;
-      return;
+      if (occ < 5) {
+        document.getElementById("notify_fail").style = "display:none";
+        document.getElementById("notify").textContent = `server got the files`;
+        return;
       }
       document.getElementById("notify").style = "display:none";
       document.getElementById("notify_fail").style = "display:inline";
@@ -218,6 +257,12 @@ async function postImage() {
     }
     else if (resp[0].includes("got your file")) {
       document.getElementById("notify").textContent = `Server returned ${resp}`
+    }
+    else if (resp[0].includes("User does not exist")) {
+      document.getElementById("validator").style = "display:in-line"
+    }
+    else {
+      document.getElementById("validator").style = "display:none"
     }
 
   }).catch(err => {
@@ -249,58 +294,74 @@ function b64toBlob(b64Data, contentType, sliceSize) {
 }
 
 
-class ImageCard{
-  static ImageCards = [];
-  constructor(id,imageObj)
-  {
-    this.div = document.createElement("div")
-    this.div.setAttribute("id",id);
-    this.id = document.createElement("h1");
-    this.id.textContent = id;
-    this.image = imageObj;
-    this.closeBtn = document.createElement("button")
-    this.closeBtn.classList.add("btn","btn-danger","closeBtn")
-    this.closeBtn.innerHTML = "X"
-    this.closeBtn.addEventListener("click",e=>{
-      console.log("here in closeBTN")
-      var id= e.target.parentElement.getAttribute("id");
-      console.log(id+1,"is the image you clicked")
-      ImageCard.removeCard(id);
-    })
-    this.div.append(id,imageObj,this.closeBtn)
-    ImageCard.ImageCards.push(this.div);
-    ImageCard.render_cards();
-  }
 
-  static render_cards(){
-    
-    var container = document.getElementById("img");
-    for(var i of ImageCard.ImageCards)
-    {
-      container.append(i);
-    }
-  }
 
-  static removeCard(id){
-    var nodes = document.getElementById("img").childNodes;
-    var child = nodes.lastElementChild;  
-    while (child) { 
-        nodes.removeChild(child); 
-        console.log("removing nodes");
-        child = e.lastElementChild; 
-    } 
-    console.log("inside remove card function  ")
-    for(var i in ImageCard.ImageCards)
-    {
-      if(id === ImageCard.ImageCards[i].getAttribute("id"))
-      {
-        ImageCard.ImageCards.splice(i,1);
-        break;
-      }
-    }
-    console.log(ImageCard.ImageCards.length)
-    ImageCard.render_cards();
-  } 
+function stopStreamedVideo(videoElem) {
+  const stream = videoElem.srcObject;
+  const tracks = stream.getTracks();
+
+  tracks.forEach(function (track) {
+    track.stop();
+  });
+
+  videoElem.srcObject = null;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// async function postData(image_data) {
+//   await $.ajax({
+//     url: 'https://heimdall.iqube.io/upload_images/', // point to server-side controller method
+//     dataType: 'image', // what to expect back from the server
+//     cache: false,
+//     contentType: false,
+//     processData: false,
+//     data: image_data,
+//     type: 'post',
+//     headers: {
+//       "Authorization": "Basic " + btoa("srinath" + ":" + "srnthsrdhrn")
+//     },
+//     success: function (response) {
+//       const p_element = document.createElement("p");
+//       p_element.textContent = "data sent to server" + Date.now().toString();
+//       document.querySelector("body").append(p_element);
+
+//     },
+//     error: function (response) {
+//       const p_element = document.createElement("p");
+//       p_element.textContent = "error sending data to the sever" + Date.now().toString();
+//       document.querySelector("body").append(p_element);
+
+//     }
+//   });
+// }
+
+// document.getElementById("user_id").document.addEventListener("change",(e)=>{
+//     if(e.target.value.length == 0)
+//     {
+//         $("#uploadbtn").prop("disabled",true);
+//     }
+//     else{
+//         $("#uploadbtn").prop("disabled",false);
+//     }
+// })
+
 
 
