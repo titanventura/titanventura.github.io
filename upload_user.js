@@ -243,6 +243,12 @@ async function postImage() {
     return res.json()
   }).then(resp => {
     console.log(resp);
+    if(resp.message){
+      if(resp.message.includes("your files"){
+          document.getElementById("notify_fail").style = "display:none";
+          document.getElementById("notify").textContent = `server got the files`;
+         }
+    }
     if (resp[0].includes("rejected")) {
       var temp = resp[0];
       var occ = (temp.match("blob") || []).length;
