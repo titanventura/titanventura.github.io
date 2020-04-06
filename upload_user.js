@@ -244,7 +244,7 @@ async function postImage() {
   }).then(resp => {
     console.log(resp);
     if(resp.message){
-      if(resp.message.includes("your files")){
+      if(resp.message.includes("your file")){
           document.getElementById("notify_fail").style = "display:none";
           document.getElementById("notify").textContent = `server got the files`;
          }
