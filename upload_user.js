@@ -255,7 +255,7 @@ async function postImage() {
       document.getElementById("notify_fail").style = "display:inline";
       document.getElementById("notify_fail").textContent = "Failure uploading to server"
     }
-    else if (resp[0].includes("got your file")) {
+    else if (resp[0].includes("your file")) {
       document.getElementById("notify").textContent = `Server returned ${resp}`
     }
     else if (resp[0].includes("User does not exist")) {
