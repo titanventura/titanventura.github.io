@@ -244,10 +244,10 @@ async function postImage() {
   }).then(resp => {
     console.log(resp);
     if(resp.message){
-      if(resp.message.includes("your file")){
+      
           document.getElementById("notify_fail").style = "display:none";
-          document.getElementById("notify").textContent = `server got the files`;
-         }
+          document.getElementById("notify").textContent = `${resp.message}`;
+        
     }
     if (resp[0].includes("rejected")) {
       var temp = resp[0];
