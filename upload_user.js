@@ -272,6 +272,7 @@ async function postImage() {
     }
 
   }).catch(err => {
+    console.log(err,"is the error uploading to server");
     document.getElementById("notify").style = "display:none";
     document.getElementById("notify_fail").style = "display:inline";
     document.getElementById("notify_fail").textContent = "Failure uploading to server"

@@ -5,7 +5,6 @@ const url_2 = "http://10.1.76.101:8000";
 const video = document.getElementById("video");
 const isScreenSmall = window.matchMedia("(max-width: 700px)");
 var can_snap = true;
-let predictedAges = [];
 
 /****Loading the model ****/
 Promise.all([faceapi.nets.tinyFaceDetector.loadFromUri("/models")]).then(startVideo);

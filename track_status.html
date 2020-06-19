@@ -402,7 +402,7 @@ canvas{
 
 const url_1 = "https://heimdall.iqube.io";
 const url_2 = "http://10.1.76.101:8000";
-
+var myinterval;
   $("#train-btn").click(function (e) {
       var msg_container = document.getElementById("message-container");
       msg_container.classList.add("alert", "alert-success");
@@ -446,7 +446,17 @@ const url_2 = "http://10.1.76.101:8000";
       var msg = document.getElementById("msg");
       var trn_status = document.getElementById("trn_status");
       var id = chrn_id;
-      var myinterval = setInterval(function () {
+      
+      // clear all previous intervals if any.
+      try{
+        clearInterval(myinterval)
+      }
+      catch(e){
+        console.log("wasn't assigned an interval yet maybe")
+      }
+
+      
+      myinterval = setInterval(function () {
           console.log("here");
 
           document.getElementById("message-container").textContent = "Recieving statuses";
