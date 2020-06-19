@@ -33,7 +33,7 @@
         <div class="sidebar-brand-icon rotate-n-15">
           <i class="fas fa-laugh-wink"></i>
         </div>
-        <div class="sidebar-brand-text mx-3">Face Recognition <sup>2</sup></div>
+        <div class="sidebar-brand-text mx-3">Face Recognition</div>
       </a>
 
       <!-- Divider -->
@@ -363,6 +363,9 @@
 
 </html>
 <script>
+  const url_1 = "https://heimdall.iqube.io";
+  const url_2 = "http://10.1.76.101:8000";
+
   function showMessage(val, message = "Please enter valid credentials") {
       const res_div = document.getElementById("result-container");
       const new_div = document.getElementById("new_div")
@@ -398,7 +401,7 @@
               //   redirect: 'follow'
           };
 
-          fetch("http://10.1.76.101:8000/create_user/", requestOptions).then(res => {
+          fetch(`${url_1}/create_user/`, requestOptions).then(res => {
               return res.json()
           }).then(result=>{
               if(result.message.includes("already exists")){
