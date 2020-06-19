@@ -106,7 +106,7 @@ async function imageDetectionJob() {
     }
   }
 }
-const CHECK_INTERVAL = 5000;
+const CHECK_INTERVAL = 3000;
 video.addEventListener("play", async () => {
   console.log(window.innerWidth);
   canvas = faceapi.createCanvasFromMedia(video);
