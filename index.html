@@ -115,14 +115,14 @@
             <!-- <h1 class="h3 mb-4 text-gray-800">Attendance</h1> -->
 
             <div id="containerr">
-              <video id="video" height="500" width="500" autoplay muted style="width: 500px;
+              <!-- <video id="video" height="500" width="500" autoplay muted style="width: 500px;
             
-            position: fixed;"></video>
+              position: fixed;"></video> -->
+              <video id="video" height="500" width="500"></video>
             </div>
             <div>
               <!-- <img src="" id="pic" width="720" height="560" alt=""> -->
-              <h2 id="user">
-                </h1>
+              <h2 id="user"></h2>
             </div>
 
 
@@ -188,99 +188,110 @@
 </body>
 
 </html>
-<style>
 
-  video {
+
+
+<style>
+  /* video {
     position: relative;
     width: 100%;
     top:0;
     left:0;
-  }
-  /* video {
-  position: relative;
-  width: 100%;
-  
+  } */
+
+
+  video {
+    position: fixed;
+    /* width: 100%; */
+    margin: 0 auto;
+    z-index: 1;
   }
 
-canvas{
-  position: fixed;
-  z-index: 10;} */
-canvas {
+  canvas {
+    position: relative;
+    z-index: 10;
+  }
+
+  /* canvas {
     position: absolute;
     float: left;
     left: 30%;
     top: -9%;
     width: 42%;
-}
-@media only screen and (min-width: 1024px) and (max-width: 1280px){
-  canvas {
-    position: absolute;
-    float: left;
-    left: 12%;
-    top: -15%;
-    width: 80%;
-}
-}
+  } */
+
+  /* @media only screen and (min-width: 1024px) and (max-width: 1280px) {
+    canvas {
+      position: absolute;
+      float: left;
+      left: 12%;
+      top: -15%;
+      width: 80%;
+    }
+  }
 
 
 
-@media only screen and (min-width: 992px) and (max-width: 1023px){
-  canvas {
-    position: absolute;
-    float: left;
-    left: 12%;
-    top: -22%;
-    width: 80%;
-}
-}
-@media only screen and (min-width: 768px) and (max-width: 991px){
-  canvas {
-    position: absolute;
-    float: left;
-    left: 0%;
-    top: -15%;
+  @media only screen and (min-width: 992px) and (max-width: 1023px) {
+    canvas {
+      position: absolute;
+      float: left;
+      left: 12%;
+      top: -22%;
+      width: 80%;
+    }
+  }
+
+  @media only screen and (min-width: 768px) and (max-width: 991px) {
+    canvas {
+      position: absolute;
+      float: left;
+      left: 0%;
+      top: -15%;
+      width: 100%;
+    }
+  }
+
+  @media only screen and (min-width: 600px) and (max-width: 767px) {
+    canvas {
+      position: fixed;
+      z-index: 999999;
+      width: 100%;
+      float: left;
+      left: 0% !important;
+      top: -6% !Important;
+      right: 0;
+    }
+  }
+
+  @media only screen and (min-width: 320px) and (max-width: 599px) {
+    canvas {
+      position: fixed;
+      z-index: 999999;
+      width: 100%;
+      float: left;
+      left: 0% !important;
+      top: 10% !Important;
+      right: 0;
+    }
+  } */
+
+  .containerr-wrap {
     width: 100%;
-}
-}
-@media only screen and (min-width: 600px) and (max-width: 767px){
-canvas {
-    position: fixed;
-    z-index: 999999;
+    float: left;
+    height: 100vh;
+    display: table;
+  }
+
+  #containerr {
     width: 100%;
     float: left;
-    left: 0% !important;
-    top: -6% !Important;
-    right: 0;
-}
-}
-@media only screen and (min-width: 320px) and (max-width: 599px){
-canvas {
-    position: fixed;
-    z-index: 999999;
-    width: 100%;
-    float: left;
-    left: 0% !important;
-    top: 10% !Important;
-    right: 0;
-}
-}
-.containerr-wrap{
-  width: 100%;
-  float: left;
-  height: 100vh;
-  display: table;
-}
-#containerr{
-  width: 100%;
-  float: left;
-  display: table-cell;
-  vertical-align: middle;
-}
+    display: table-cell;
+    vertical-align: middle;
+  }
 
-
-
-  canvas {
+  /* canvas {
     position: fixed;
     z-index: 10;
-  }
+  } */
 </style>
