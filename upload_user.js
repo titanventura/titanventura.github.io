@@ -10,7 +10,7 @@ let predictedAges = [];
 
 /****Loading the model ****/
 Promise.all([
-  faceapi.nets.ssdMobilenetv1.loadFromUri("./models"),
+  faceapi.nets.ssdMobilenetv1.loadFromUri("/models"),
 ]).then(() => { });
 var user_input = "";
 
