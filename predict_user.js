@@ -14,8 +14,8 @@ let MODELURL = "/models"
 /****Loading the model ****/
 Promise.all([
 	faceapi.nets.tinyFaceDetector.loadFromUri(MODELURL),
-	faceapi.nets.faceLandmark68Net.loadFromUri(MODELURL),
-	faceapi.nets.ssdMobilenetv1.loadFromUri(MODELURL)
+	// faceapi.nets.faceLandmark68Net.loadFromUri(MODELURL),
+	// faceapi.nets.ssdMobilenetv1.loadFromUri(MODELURL)
 ]).then(startVideo);
 // Promise.all([faceapi.nets.ssdMobilenetv1.loadFromUri("/models")]).then(startVideo);
 
