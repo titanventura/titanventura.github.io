@@ -7,10 +7,12 @@ const video = document.getElementById("vid");
 const isScreenSmall = window.matchMedia("(max-width: 700px)");
 var can_snap = true;
 let predictedAges = [];
-
+let MODELURL = "/models"
 /****Loading the model ****/
 Promise.all([
-  faceapi.nets.ssdMobilenetv1.loadFromUri("/models"),
+  faceapi.nets.tinyFaceDetector.loadFromUri(MODELURL),
+  faceapi.nets.faceLandmark68Net.loadFromUri(MODELURL),
+  faceapi.nets.ssdMobilenetv1.loadFromUri(MODELURL)
 ]).then(() => { });
 var user_input = "";
 
