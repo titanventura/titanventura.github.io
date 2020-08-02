@@ -228,7 +228,7 @@ async function postImage() {
 
 
     form_data.append(image_name, blob);
-    form_data.append(`image_${i}_${RANDOM_ID()}`, `${user_id}${RANDOM_ID()}`)
+    form_data.append(`image_${i}${RANDOM_ID()}`, `${user_id}${RANDOM_ID()}`)
   }
   console.log("image entries aree");
   for (var i of form_data.entries()) {
