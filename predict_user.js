@@ -46,6 +46,7 @@ isScreenSmall.addListener(screenResize);
 let displaySize = null;
 let canvas = null;
 const MAX_LIMIT = 30;
+const INTERVAL = 100;
 
 
 async function detectImage() {
@@ -82,7 +83,7 @@ async function detectImage() {
 function resetActiveJob() {
 	setTimeout(() => {
 		JOB_ACTIVE = false;
-	}, 1000);
+	}, 3000);
 }
 
 let JOB_ACTIVE = false;
@@ -129,7 +130,7 @@ async function imageDetectionJob() {
 	}
 }
 
-const CHECK_INTERVAL = 200;
+const CHECK_INTERVAL = 500;
 video.addEventListener("play", async () => {
 	console.log(window.innerWidth);
 	canvas = faceapi.createCanvasFromMedia(video);
