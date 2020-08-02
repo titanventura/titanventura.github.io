@@ -7,12 +7,15 @@ const isScreenSmall = window.matchMedia("(max-width: 700px)");
 var can_snap = true;
 
 /****Loading the model ****/
+
+
+
 let MODELURL = "/models"
 /****Loading the model ****/
 Promise.all([
-  faceapi.nets.tinyFaceDetector.loadFromUri(MODELURL),
-  faceapi.nets.faceLandmark68Net.loadFromUri(MODELURL),
-  faceapi.nets.ssdMobilenetv1.loadFromUri(MODELURL)
+	faceapi.nets.tinyFaceDetector.loadFromUri(MODELURL),
+	// faceapi.nets.faceLandmark68Net.loadFromUri(MODELURL),
+	// faceapi.nets.ssdMobilenetv1.loadFromUri(MODELURL)
 ]).then(startVideo);
 // Promise.all([faceapi.nets.ssdMobilenetv1.loadFromUri("/models")]).then(startVideo);
 
@@ -49,7 +52,9 @@ const INTERVAL = 100;
 async function detectImage() {
 	const detection = await faceapi.detectSingleFace(video, new faceapi.TinyFaceDetectorOptions());
 
+
 	if (detection != null && can_snap == true) {
+
 		// Should be only here.. not anywhere else
 		const resizedDetections = faceapi.resizeResults(detection, displaySize);
 		// const blob = canvas.toDataURL("image/png");
