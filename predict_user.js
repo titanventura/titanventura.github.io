@@ -49,7 +49,7 @@ const MAX_LIMIT = 30;
 
 
 async function detectImage() {
-	const detection = await faceapi.detectSingleFace(video, new faceapi.SsdMobilenetv1Options());
+	const detection = await faceapi.detectSingleFace(video, new faceapi.TinyFaceDetectorOptions());
 
 
 	if (detection != null && can_snap == true) {
