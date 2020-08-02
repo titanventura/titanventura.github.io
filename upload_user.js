@@ -10,20 +10,20 @@ let predictedAges = [];
 
 /****Loading the model ****/
 Promise.all([
-  faceapi.nets.tinyFaceDetector.loadFromUri("./models"),
+  faceapi.nets.ssdMobilenetv1.loadFromUri("./models"),
 ]).then(() => { });
 var user_input = "";
 
 
 function startVideo() {
-  
-      document.getElementById("validator").style = "display:none";
-      navigator.getUserMedia(
-        { video: {} },
-        stream => (video.srcObject = stream),
-        err => console.error(err)
-      );
-    
+
+  document.getElementById("validator").style = "display:none";
+  navigator.getUserMedia(
+    { video: {} },
+    stream => (video.srcObject = stream),
+    err => console.error(err)
+  );
+
 }
 
 
@@ -40,11 +40,10 @@ var callAPi = (username) => {
   }).then((resp) => {
     var x = document.getElementById("validator")
     x.style = "display:none"
-    if(resp.id != undefined)
-    {
+    if (resp.id != undefined) {
       startVideo();
     }
-    else if(resp.message.includes("does not exist")){
+    else if (resp.message.includes("does not exist")) {
       var x = document.getElementById("validator")
       x.innerHTML = "user does not exist"
       x.style = "display:in-line"
@@ -62,11 +61,11 @@ var callAPi = (username) => {
 
 
 $("#frm").submit((e) => {
-  
+
   var something = document.getElementById("validator")
-  something.style="display:block"
+  something.style = "display:block"
   something.textContent = "requesting..."
-  console.log("submit btn clicked"); 
+  console.log("submit btn clicked");
   e.preventDefault()
 
   user_input = $("#user_id").val()
@@ -74,7 +73,7 @@ $("#frm").submit((e) => {
     callAPi(user_input);
   }
   else {
-    var x= document.getElementById("validator")
+    var x = document.getElementById("validator")
     x.textContent = "Please enter valid user input"
     x.style = "display:block"
   }
@@ -201,7 +200,7 @@ async function postImage() {
   const myHeaders = new Headers();
   myHeaders.append("Authorization", "Basic " + btoa("srinath" + ":" + "srnthsrdhrn"));
 
-  
+
   // myHeaders.append("Content-Type", "multipart/form-data; boundary=--------------------------967216418725170803396561");
   // myHeaders.append("Access-Control-Allow-Origin","true");  
   // myHeaders.append("Accept","*/*");        
@@ -227,6 +226,7 @@ async function postImage() {
 
 
     form_data.append(image_name, blob);
+    form_data.append(`img_${RANDOM_ID()}`, `${user_id}_${RANDOM_ID()}`)
   }
   console.log("image entries aree");
   for (var i of form_data.entries()) {
@@ -243,11 +243,11 @@ async function postImage() {
     return res.json()
   }).then(resp => {
     console.log(resp);
-    if(resp.message){
-      
-          document.getElementById("notify_fail").style = "display:none";
-          document.getElementById("notify").textContent = `${resp.message}`;
-        
+    if (resp.message) {
+
+      document.getElementById("notify_fail").style = "display:none";
+      document.getElementById("notify").textContent = `${resp.message}`;
+
     }
     if (resp[0].includes("rejected")) {
       var temp = resp[0];
@@ -272,7 +272,7 @@ async function postImage() {
     }
 
   }).catch(err => {
-    console.log(err,"is the error uploading to server");
+    console.log(err, "is the error uploading to server");
     document.getElementById("notify").style = "display:none";
     document.getElementById("notify_fail").style = "display:inline";
     document.getElementById("notify_fail").textContent = "Failure uploading to server"
@@ -315,6 +315,12 @@ function stopStreamedVideo(videoElem) {
 }
 
 
+var RANDOM_ID = function () {
+  // Math.random should be unique because of its seeding algorithm.
+  // Convert it to base 36 (numbers + letters), and grab the first 9 characters
+  // after the decimal.
+  return '_' + Math.random().toString(36).substr(2, 9);
+};
 
 
 

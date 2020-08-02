@@ -7,7 +7,8 @@ const isScreenSmall = window.matchMedia("(max-width: 700px)");
 var can_snap = true;
 
 /****Loading the model ****/
-Promise.all([faceapi.nets.tinyFaceDetector.loadFromUri("/models")]).then(startVideo);
+Promise.all([faceapi.nets.ssdMobilenetv1.loadFromUri("/models")]).then(startVideo);
+// Promise.all([faceapi.nets.ssdMobilenetv1.loadFromUri("/models")]).then(startVideo);
 
 function startVideo() {
 	navigator.mediaDevices.getUserMedia({ video: true })
