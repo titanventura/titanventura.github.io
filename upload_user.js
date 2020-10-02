@@ -10,9 +10,9 @@ let predictedAges = [];
 let MODELURL = "/models"
 /****Loading the model ****/
 Promise.all([
-	faceapi.nets.tinyFaceDetector.loadFromUri(MODELURL),
+// 	faceapi.nets.tinyFaceDetector.loadFromUri(MODELURL),
 	// faceapi.nets.faceLandmark68Net.loadFromUri(MODELURL),
-	// faceapi.nets.ssdMobilenetv1.loadFromUri(MODELURL)
+	faceapi.nets.ssdMobilenetv1.loadFromUri(MODELURL)
 ]).then(() => { });
 var user_input = "";
 
@@ -113,7 +113,8 @@ video.addEventListener('play', () => {
 	const displaySize = { width: video.width, height: video.height }
 	faceapi.matchDimensions(canvas, displaySize)
 	setInterval(async () => {
-		const detections = await faceapi.detectSingleFace(video, new faceapi.TinyFaceDetectorOptions());
+// 		const detections = await faceapi.detectSingleFace(video, new faceapi.TinyFaceDetectorOptions());
+		const detections = await faceapi.detectSingleFace(video);
 
 
 
