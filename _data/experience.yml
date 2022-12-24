@@ -1,19 +1,67 @@
 # Jobs
 # VP of Global Communications
-- company: Springfield International Human Rights Outreach
-  position: VP of Global Communications
-  duration: Oct, 2013 &mdash; Present
-  summary: Write about your core competencies in one or two sentences describing your position. If you held the position for a long time, it could be a longer section, including a couple bullet points	<ul class="resume-item-list"><li>A project you are proud of</li><li>Another awesome project</li><li>or a team or department you worked with</li></ul>
+- company: Thoughtworks
+  position: Application Developer (Intern & Graduate)
+  duration: Mar 2022 &mdash; Present
+  summary: |
+    <p>
+      Worked on multiple internal applications. 
+      <br>
+      Used the following tools and practices.
+      <ul class="resume-item-list">
+        <li>TDD - Agile - Clean Code - Design Patterns</li>
+        <li>Java - Spring Boot</li>
+        <li>Golang - Gin</li>
+        <li>Docker - Terraform - CircleCI - GCP</li>
+      </ul>
+    </p>
 
 # Director of Digital Stratgy
-- company: United Nations Human Rights Council
-  position: Director of Digital Strategy
-  duration:  Jun, 2010 &mdash; Sept, 2013
-  summary: If your stint was shorter, feel free to be brief and just call out the most meaningful points of your role. Be concise, and be meaninful. The person reading just needs enough to want to talk to you more about your experience.
+- company: iQube - Innovation forum @ KCT
+  position: Developer Intern
+  duration:  Jan 2020 &mdash; Feb 2022
+  summary: |
+    <p>
+      Built and deployed multiple applications from the ground up.
+      <br>
+      Used the following tools and practices.
+      <ul class="resume-item-list">
+        <li>Python - Django - Celery - Redis - Docker</li>
+        <li>JavaScript - JQuery - MERN</li>
+        <li>Bitbucket - Jenkins</li>
+      </ul>
+    </p>
 
-
-# Communications Coordinator
-- company: Springfield Women & Children's Center
-  position: Communications Coordinator
-  duration:   Jun, 2008  &mdash; May, 2010
-  summary: Led communication efforts across digital and traditional media channels for marketing and public relations, internal communication strategies, and coordinated support programs for the recipients of the center's services.
+# <p>
+#           Built and deployed multiple applications from the ground up.
+#           <ul>
+#               <li>
+#                   Entry pass management app
+#                   <ul>
+#                       <li>Web Application that lets college staff book their visit to the campus and claim entry passes during the COVID-19 outbreak</li>
+#                       <li>Used Python, Django, Node JS, React JS, Docker</li>
+#                   </ul>
+#               </li>
+#               <li>
+#                   KodeLabs
+#                   <ul>
+#                       <li>A Web 3.0 based application for beginners to learn to code in a block based editor. Rewards learners with an ERC-20 token hosted on a private ethereum node</li>
+#                       <li>Python, Django, Redis, Web3.py, Geth, Solidity, Docker</li>
+#                   </ul>
+#               </li>
+#               <li>
+#                   Face Recognition Web App
+#                   <ul>
+#                       <li>Web Application to authenticate and check-in college staff using a face detection model that runs on the browser</li>
+#                       <li>React.js, Node.js, Face-api.js, Tensorflow, SSD MobileNet V1, Python, Django, Docker</li>
+#                   </ul>
+#               </li>
+#               <li>
+#                   Face Mask Crowd Analytics
+#                   <ul>
+#                       <li>Trained a YOLO V5 model to detect face masks, built a web application to accumulate real time video feed and provide crowd insights</li>
+#                       <li>Python, Tensorflow, Yolo V5, OpenCV, CUDA, CUDNN, Django</li>
+#                   </ul>
+#               </li>
+#           </ul>
+#         </p>
