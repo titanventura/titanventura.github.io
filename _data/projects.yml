@@ -9,7 +9,7 @@
   description: A Web 3.0 based application for beginners to learn to code in a block based editor. Rewards learners with an ERC-20 token hosted on a private ethereum node
   # url: "#"
 - project: Face Recognition Web App
-  description: React.js, Node.js, Face-api.js, Tensorflow, SSD MobileNet V1, Python, Django, Docker
+  description: Web Application to authenticate and check-in college staff using a face detection model that runs on the browser
   # url: "#"
 - project: Face Mask Crowd Analytics
   description: Trained a YOLO V5 model to detect face masks, built a web application to accumulate real time video feed and provide crowd insights
